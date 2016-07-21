@@ -1,0 +1,13 @@
+<% require 'kelkoo/erb_utils' %><Context docBase="<%= value("application_home") %>/docBase" reloadable="false" >
+
+      
+   <!-- Indicates if there is no-cache in the cache control directive in the response headers (false: no-cache is added) -->
+   <Environment name="cacheEnabled" value="false" type="java.lang.Boolean" override="false"/>
+    
+   <!-- Indicates if there is no-transform in the cache control directive in the response headers (false: no-transform is added) -->
+   <Environment name="cacheTransformEnabled" value="false" type="java.lang.Boolean" override="false"/>
+        
+   <!-- For each service, the value of the max-age cache control directive, a value of -1 will disable the directive (in seconds) -->
+   <Environment name="cacheGetRefreshTriggerWithIdMaxAge" value="-1" type="java.lang.Integer" override="false"/>
+    
+</Context>

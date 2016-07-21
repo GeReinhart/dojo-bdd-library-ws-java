@@ -1,0 +1,6 @@
+compress
+<%=value("application_logs")%>/*.log {
+  rotate <%= value("dojo_suggestions_ws_logrotate_count") %>
+  copytruncate
+  <%= value("dojo_suggestions_ws_logrotate_frequency") %>
+}
