@@ -5,7 +5,10 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -58,12 +61,19 @@ public class BDDSuggestionsWSSteps {
 	@Given("^the user \"([^\"]*)\"$")
 	public void given_the_user(String userId) throws Throwable {
 		this.user = new User(userId);
-		when(usersWSClientMock.retrieveUser(user.getUserId())).thenReturn(user);
+		given_the_user_from_user_ws( this.user.getUserId(), new UserStep(user).fields   );
 	}
 
 	@Given("^he is \"([^\"]*)\" years old$")
 	public void given_he_is_years_old(Integer age) throws Throwable {
 		this.user.setAge(age);
+		given_the_user_from_user_ws( this.user.getUserId(), new UserStep(user).fields   );
+	}
+	
+	@Given("^the user from http://localhost:8080/user/([^\"]*)$")
+	public void given_the_user_from_user_ws(String userId, List<FieldValue> values) throws Throwable {
+		FieldValues fieldsValues = new FieldValues(values);
+		this.user = new User(userId , fieldsValues.getAsInteger("age") );
 		when(usersWSClientMock.retrieveUser(user.getUserId())).thenReturn(user);
 	}
 
@@ -71,9 +81,15 @@ public class BDDSuggestionsWSSteps {
 	public void given_the_popular_categories_for_this_age_are(List<Category> popularCategoriesGivenAgeUser)
 			throws Throwable {
 		Boolean isPopular = true ;
-		when(categoriesWSClientMock.retrieveCategories(isPopular, user.getAge())).thenReturn(popularCategoriesGivenAgeUser);
+		the_categories_from_categories_ws(isPopular, user.getAge(), popularCategoriesGivenAgeUser);
 	}
 
+	@Given("^the categories from http://localhost:8081/category\\?popular=([^\"]*)&age=(\\d+)$")
+	public void the_categories_from_categories_ws(Boolean isPopular , Integer age, List<Category> popularCategoriesGivenAgeUser) throws Throwable {
+		when(categoriesWSClientMock.retrieveCategories( isPopular, user.getAge())).thenReturn(popularCategoriesGivenAgeUser);
+	}
+	
+	
 	@Given("^the available books for categories \"([^\"]*)\" are$")
 	public void given_the_search_results_for_categories_are(String categoryIds, List<Book> searchResult) throws Throwable {
 		Boolean available = true ;
@@ -118,4 +134,59 @@ public class BDDSuggestionsWSSteps {
 
 	}
 
+	public static class FieldValue{
+		public String field ;
+		public String value ;
+		
+		public FieldValue(String field,String value){
+			this.field = field;
+			this.value = value;
+		}
+	}
+	
+	public static class FieldValues{
+		
+		private Map<String, String> fieldsValues = new HashMap<String, String>();
+		
+		public FieldValues( List<FieldValue> fields){
+             for (FieldValue fieldValue : fields) {
+            	 fieldsValues.put(fieldValue.field, fieldValue.value);
+			 } 
+		}
+		
+		public Integer getAsInteger(String field) {
+			if(get(field) == null){
+				return null ;
+			}
+			return  Integer.decode(get( field));
+		}
+
+		public String get(String field){
+			return fieldsValues.get(field);
+		}
+		
+	}
+	
+	public static class UserStep{
+		
+		public List<FieldValue> fields = new ArrayList<FieldValue>();
+		private String userId;
+		private Integer age;
+		
+		public UserStep(User user){
+			this.userId = user.getUserId();
+			this.age = user.getAge();
+			this.fields.add(new FieldValue("userId",userId));
+			if(age != null){
+				this.fields.add(new FieldValue("age",age.toString()));
+			}
+		}
+		
+		public User toUser(){
+			return new User(userId,age);
+		}
+		
+		
+	}
+	
 }

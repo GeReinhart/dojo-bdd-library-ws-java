@@ -17,6 +17,11 @@ public class User {
 		this.userId = userId;
 	}
 
+	public User(String userId, Integer age){
+		this.userId = userId;
+		this.age = age ;
+	}
+	
 	public User(String userId, Integer age, List<Book> alreadyBookedBooks){
 		this.userId = userId;
 		this.age = age ;

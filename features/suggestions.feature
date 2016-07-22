@@ -117,4 +117,28 @@ Feature: Providing book suggestions
       | b21    | book22    | cat2       |
       | b22    | book22    | cat2       |
       
+  @level_2_technical_details @nominal_case @ongoing
+  Scenario: suggestions of popular and available books adpated to the age of the user
+
+    Given the user from http://localhost:8080/user/user1
+      | field   | value  |
+      | userId  | user1  |
+      | age     | 4      |
+    And the categories from http://localhost:8081/category?popular=true&age=4
+      | categoryId | categoryName  |
+      | cat1       | categoryName1 |
+      | cat2       | categoryName2 |
+      | cat3       | categoryName3 |
+    And the books from http://localhost:8082/search?categories=cat1,cat2,cat3&available=true 
+      | bookId | bookTitle | categoryId |
+      | b11    | book11    | cat1       |
+      | b21    | book21    | cat2       |
+      | b31    | book31    | cat3       |
+    When we ask http://localhost:8090/suggestions/user/user1&maxResults=3 
+    Then the suggestions are
+      | bookId | bookTitle | categoryId |
+      | b11    | book11    | cat1       |
+      | b21    | book21    | cat2       |
+      | b31    | book31    | cat3       |
+      
       
