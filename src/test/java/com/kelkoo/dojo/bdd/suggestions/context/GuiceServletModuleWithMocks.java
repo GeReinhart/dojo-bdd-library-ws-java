@@ -2,9 +2,9 @@ package com.kelkoo.dojo.bdd.suggestions.context;
 
 import static org.mockito.Mockito.mock;
 
-import com.kelkoo.dojo.bdd.suggestions.dependencies.category.CategoriesClient;
-import com.kelkoo.dojo.bdd.suggestions.dependencies.search.SearchClient;
-import com.kelkoo.dojo.bdd.suggestions.dependencies.user.UserHistoryWSClient;
+import com.kelkoo.dojo.bdd.suggestions.dependencies.category.CategoriesWSClient;
+import com.kelkoo.dojo.bdd.suggestions.dependencies.search.SearchWSClient;
+import com.kelkoo.dojo.bdd.suggestions.dependencies.user.UsersWSClient;
 
 public class GuiceServletModuleWithMocks extends GuiceServletModule {
 
@@ -12,15 +12,15 @@ public class GuiceServletModuleWithMocks extends GuiceServletModule {
 		super(guiceServletConfig);
 	}
 
-	public UserHistoryWSClient userHistoryWSClientMock = mock(UserHistoryWSClient.class);
-	public SearchClient searchClientMock = mock(SearchClient.class);
-	public CategoriesClient categoriesClientMock = mock(CategoriesClient.class);
+	public UsersWSClient usersWSClientMock = mock(UsersWSClient.class);
+	public SearchWSClient searchClientMock = mock(SearchWSClient.class);
+	public CategoriesWSClient categoriesWSClientMock = mock(CategoriesWSClient.class);
 
 	@Override
 	protected void configureDependenciesBeans() {
-		bind(UserHistoryWSClient.class).toInstance(userHistoryWSClientMock);
-		bind(SearchClient.class).toInstance(searchClientMock);
-		bind(CategoriesClient.class).toInstance(categoriesClientMock);
+		bind(UsersWSClient.class).toInstance(usersWSClientMock);
+		bind(SearchWSClient.class).toInstance(searchClientMock);
+		bind(CategoriesWSClient.class).toInstance(categoriesWSClientMock);
 	}
 
 }

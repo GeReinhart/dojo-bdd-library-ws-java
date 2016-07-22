@@ -8,6 +8,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.kelkoo.dojo.bdd.suggestions.dependencies.search.Book;
+
 @XmlRootElement(name = "suggestions")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Suggestions {
@@ -43,6 +45,12 @@ public class Suggestions {
 		this.suggestions.addAll(suggestions);
 	}
 
+	public void addSuggestionsAsBooks(List<Book> books) {
+		for (Book book : books) {
+		   addSuggestion(book);	
+		}
+	}
+	
 	public void addSuggestions(Suggestions suggestions) {
 		this.suggestions.addAll(suggestions.getSuggestions());
 	}
@@ -51,6 +59,10 @@ public class Suggestions {
 		this.suggestions.add(suggestion);
 	}
 
+	public void addSuggestion(Book book) {
+		this.suggestions.add(new Suggestion(book));
+	}
+	
 	public int size(){
 		return this.suggestions.size();
 	}

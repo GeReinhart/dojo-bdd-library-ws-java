@@ -1,17 +1,10 @@
 package com.kelkoo.dojo.bdd.suggestions.context;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.inject.servlet.ServletModule;
-import com.kelkoo.dojo.bdd.suggestions.dependencies.category.CategoriesClient;
-import com.kelkoo.dojo.bdd.suggestions.dependencies.search.SearchClient;
-import com.kelkoo.dojo.bdd.suggestions.dependencies.user.UserHistoryWSClient;
+import com.kelkoo.dojo.bdd.suggestions.dependencies.category.CategoriesWSClient;
+import com.kelkoo.dojo.bdd.suggestions.dependencies.search.SearchWSClient;
+import com.kelkoo.dojo.bdd.suggestions.dependencies.user.UsersWSClient;
 import com.kelkoo.dojo.bdd.suggestions.resources.SuggestionsResource;
-import com.kelkoo.search.client.Searcher;
-import com.kelkoo.webservice.client.WebServiceClientException;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
 public class GuiceServletModule extends ServletModule {
@@ -34,30 +27,21 @@ public class GuiceServletModule extends ServletModule {
 	}
 
 	protected void configureDependenciesBeans(){
-		bind(UserHistoryWSClient.class);
-		bindSearchClient();
-		bindCategoriesClient();
+		bindUserWSClient();
+		bindSearchWSClient();
+		bindCategoriesWSClient();
 	}
 
-	private void bindCategoriesClient() {
-		try {
-			bind(CategoriesClient.class).toInstance(  new CategoriesClient(guiceServletConfig.getCategoryServingHost(),guiceServletConfig.getCategoryServingPort())  );
-		} catch (WebServiceClientException e) {
-			throw new RuntimeException(e);
-		}
+	private void bindCategoriesWSClient() {
+		bind(CategoriesWSClient.class).toInstance(  new CategoriesWSClient(guiceServletConfig.getCategoriesWSUrl())  );
 	}
 
-	private void bindSearchClient() {
-		Map<String, Searcher> searcherByCountry = new HashMap<String, Searcher>();
-		for (String country : guiceServletConfig.getActiveCountries()) {
-			SearchClient searchClient = new SearchClient(searcherByCountry ) ;
-			bind(SearchClient.class).toInstance(searchClient);
-			try {
-				searcherByCountry.put(country, new Searcher(new URL(guiceServletConfig.getSearchUrl(country)))) ;
-			} catch (MalformedURLException e) {
-				throw new RuntimeException(e);
-			}
-		}
+	private void bindSearchWSClient() {
+		bind(SearchWSClient.class).toInstance(  new SearchWSClient(guiceServletConfig.getSearchWSUrl())  );
+	}
+	
+	private void bindUserWSClient() {
+		bind(UsersWSClient.class).toInstance(  new UsersWSClient(guiceServletConfig.getUsersWSUrl())  );
 	}
 
 }

@@ -54,16 +54,15 @@ public class EmbeddedSuggestionsWSServer extends JerseyTest {
 		return resource().path("application.wadl").accept(APPLICATION_XML).get(ClientResponse.class); 
 	}
 
-	public ClientResponse clientResponseOnSuggestions(String relativeUrl, String user, String userQuery) {
-		
+	public ClientResponse clientResponseOnSuggestions(String relativeUrl, String userId, Integer maxResults) {
 		
 		WebResource webResource = resource().path(relativeUrl);
-		if (user != null){
-			webResource = webResource.queryParam("user",user)	;
+		if (userId != null){
+			webResource = webResource.queryParam("userId",userId)	;
 		}
-		if (userQuery != null){
-			webResource = webResource.queryParam("userQuery",userQuery)	;
-		}		
+		if (maxResults != null){
+			webResource = webResource.queryParam("maxResults",maxResults.toString())	;
+		}
 		return webResource.accept(APPLICATION_XML).get(ClientResponse.class);
 	}
 

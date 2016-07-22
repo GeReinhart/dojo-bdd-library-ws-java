@@ -38,18 +38,17 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 		return properties.get("active.countries").toString().split(",");
 	}
 
-	public String getSearchUrl(String country) {
-		return  properties.get( String.format("search.%s.url", country)).toString();
+	public String getSearchWSUrl() {
+		return  properties.get( "search.ws.url").toString();
 	}
 	
-	public String getCategoryServingHost() {
-		return  properties.get( "category.serving.host").toString();
+	public String getCategoriesWSUrl() {
+		return  properties.get( "categories.ws.url").toString();
 	}
 	
-	public int getCategoryServingPort() {
-		return  Integer.valueOf( properties.get( "category.serving.port").toString() );
+	public String getUsersWSUrl() {
+		return  properties.get( "users.ws.url").toString();
 	}
-
 	
 	
 	

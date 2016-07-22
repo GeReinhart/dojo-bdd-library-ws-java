@@ -58,28 +58,6 @@
 
 	<dependencies>
 
-		<!-- Kelkoo dependencies -->
-		<dependency>
-			<groupId>com.kelkoo.category</groupId>
-			<artifactId>categoryServingClient</artifactId>
-			<version>1.2.13</version>
-		</dependency>
-		<dependency>
-			<groupId>com.kelkoo.search</groupId>
-			<artifactId>searchClientAPI</artifactId>
-			<version>1.2.46</version>
-		</dependency>
-		<dependency>
-			<groupId>com.kelkoo.common</groupId>
-			<artifactId>webService</artifactId>
-			<version>${kelkoo-webservice.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.kelkoo.sem</groupId>
-			<artifactId>webServiceClientUtils</artifactId>
-			<version>${sem.shared.utils.version}</version>
-		</dependency>
-
 		<!-- Basic dependencies -->
 		<dependency>
 			<groupId>commons-io</groupId>

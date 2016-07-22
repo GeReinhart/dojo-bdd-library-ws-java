@@ -1,104 +1,89 @@
 package com.kelkoo.dojo.bdd.suggestions.resources;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
-import com.kelkoo.dojo.bdd.suggestions.dependencies.category.CategoriesClient;
-import com.kelkoo.dojo.bdd.suggestions.dependencies.search.SearchClient;
-import com.kelkoo.dojo.bdd.suggestions.dependencies.user.UserHistoryWSClient;
-import com.kelkoo.dojo.bdd.suggestions.representations.Suggestion;
+import com.kelkoo.dojo.bdd.suggestions.dependencies.category.CategoriesWSClient;
+import com.kelkoo.dojo.bdd.suggestions.dependencies.category.Category;
+import com.kelkoo.dojo.bdd.suggestions.dependencies.search.Book;
+import com.kelkoo.dojo.bdd.suggestions.dependencies.search.SearchWSClient;
+import com.kelkoo.dojo.bdd.suggestions.dependencies.user.User;
+import com.kelkoo.dojo.bdd.suggestions.dependencies.user.UsersWSClient;
 import com.kelkoo.dojo.bdd.suggestions.representations.Suggestions;
-import com.kelkoo.search.client.bean.result.Offer;
-import com.kelkoo.search.client.bean.result.Result;
-import com.kelkoo.search.client.exception.SearchServerException;
 
 @RequestScoped
-@Path("/Country/{countryPrefix}/Suggestions")
+@Path("/Suggestions")
 public class SuggestionsResource {
 
 	private static final Logger LOGGER = Logger.getLogger(SuggestionsResource.class);
 
-	private UserHistoryWSClient userHistoryWSClient;
+	private static final Integer DEFAULT_MAX_RESULT = 100;
 
-	private CategoriesClient categoriesClient;
+	private UsersWSClient userWSClient;
 
-	private SearchClient searchClient;
+	private CategoriesWSClient categoriesWSClient;
+
+	private SearchWSClient searchWSClient;
 
 	@Inject
-	public SuggestionsResource(UserHistoryWSClient userHistoryWSClient, SearchClient searchClient,
-			CategoriesClient categoriesClient) {
-		this.userHistoryWSClient = userHistoryWSClient;
-		this.searchClient = searchClient;
-		this.categoriesClient = categoriesClient;
-	}
-
-	@PathParam("countryPrefix")
-	String countryPrefix;
-
-	public void setCountryPrefix(String countryPrefix) {
-		this.countryPrefix = countryPrefix;
+	public SuggestionsResource(UsersWSClient usersWSClient, SearchWSClient searchWSClient,
+			CategoriesWSClient categoriesWSClient) {
+		this.userWSClient = usersWSClient;
+		this.searchWSClient = searchWSClient;
+		this.categoriesWSClient = categoriesWSClient;
 	}
 
 	@GET
-	@QueryParam("maxResults")
 	@Produces("application/xml")
-	public Suggestions getSuggestions(@QueryParam("user") String user, @QueryParam("userQuery") String userQuery)
-			throws SearchServerException {
+	public Suggestions getSuggestions(@QueryParam("userId") String userId, @QueryParam("maxResults") Integer maxResults) {
 
 		Suggestions suggestions = new Suggestions();
-		LOGGER.debug("getSuggestions for user " + user + " and query "+ userQuery);
-		
-		try {
-			if (userHistoryWSClient.hasUserHistory(user)) {
+		maxResults = maxResults == null ? DEFAULT_MAX_RESULT : maxResults;
 
-				String lastQuery = userHistoryWSClient.getLastQueryForUser(user);
-				Result result = searchClient.searchOffersByQuery(countryPrefix, lastQuery);
-				suggestions = buildSuggestionsFromResult(result);
+		LOGGER.debug("getSuggestions for user " + userId);
 
-			} else {
-
-				List<String> mostPopularCategories = userHistoryWSClient.getMostPopularCategories(countryPrefix);
-
-				Iterator<String> mostPopularCategoriesIterator = mostPopularCategories.iterator();
-				while (suggestions.isEmpty() && mostPopularCategoriesIterator.hasNext()) {
-					String mostPopularCategory = mostPopularCategoriesIterator.next();
-					Result result = searchClient.searchOffersByCategory(countryPrefix, mostPopularCategory);
-					suggestions = buildSuggestionsFromResult(result);
-				}
-
+		User user = userWSClient.retrieveUser(userId);
+		Boolean isPopular = true;
+		List<Category> popularCategories = categoriesWSClient.retrieveCategories(isPopular, user.getAge());
+		Boolean bookAvailable = true;
+		List<Book> books = searchWSClient.searchBooks(bookAvailable, extractCategoryIds(popularCategories));
+		List<Book> booksForSuggestions = new ArrayList<Book>();
+        Set<String> categories = new HashSet<String>();
+        
+		for (Book book : books) {
+			if (! user.hasAlreadyBooked(book)  && ! categories.contains(book.getCategoryId()) ) {
+				booksForSuggestions.add(book);
+				categories.add(book.getCategoryId());
 			}
-		} catch (SearchServerException e) {
-			throw new WebApplicationException(Response.Status.SERVICE_UNAVAILABLE);
 		}
 
-		userHistoryWSClient.addUserEvent(user, userQuery);
+		if (booksForSuggestions.size() > maxResults) {
+			booksForSuggestions = booksForSuggestions.subList(0, maxResults);
+		}
 
-		
-			
+		suggestions.addSuggestionsAsBooks(booksForSuggestions);
 		LOGGER.debug("Return " + suggestions);
 		return suggestions;
 	}
 
-	private Suggestions buildSuggestionsFromResult(Result result) {
-		Suggestions suggestions = new Suggestions();
-		if (result != null) {
-			for (Offer offer : result.offers) {
-				suggestions.addSuggestion(new Suggestion(offer.getOfferId(), offer.getTitle()));
-			}
+	public String[] extractCategoryIds(List<Category> categories) {
+		String[] categoryIds = new String[categories.size()];
+		for (int i = 0; i < categoryIds.length; i++) {
+			categoryIds[i] = categories.get(i).getCategoryId();
 		}
-		return suggestions;
+		return categoryIds;
 	}
 
 }

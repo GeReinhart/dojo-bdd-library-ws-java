@@ -1,89 +1,120 @@
-Feature: admin offer suggestions
-
-  Background:  
-    Given we are working on "fr"
-
-  @level_0_high_level @nominal_case @valid
-  Scenario: admin For a new user without any query, suggest offers from the most popular category
-    Given a new user without any query
-    When the suggestion service is called
-    Then offers from the most popular category are returned
-    And the user is not a new user anymore
+Feature: Providing book suggestions
 
   @level_1_specification @nominal_case @valid
-  Scenario: admin For a new user without any query, suggest offers from the most popular category
-    Given the user "user1"
-    And the userHistory web service have no history on "user1"
-    And the query is ""
-    And the most popular category returned by userHistory web service is category "124901"
-    And the search results for categoryId "124901" is
-      | offerId | offerTitle  |
-      |       1 | offerTitle1 |
-      |       2 | offerTitle2 |
-      |       3 | offerTitle3 |
-    When we call suggestions service "/Country/fr/Suggestions"
-    Then the suggestions service call is a success
-    Then the suggestions are
-      | offerId | offerTitle  |
-      |       1 | offerTitle1 |
-      |       2 | offerTitle2 |
-      |       3 | offerTitle3 |
-    And userHistory web service has been called to create the user "user1"
-
-  @level_1_specification @limit_case @valid
-  Scenario: admin For a new user without any query, suggest offers from the most popular category.
-     As there are no offers in the most popular, the system use the second most popular category as a fallback.
+  Scenario: suggestions of popular and available books adpated to the age of the user
 
     Given the user "user1"
-    And the userHistory web service have no history on "user1"
-    And the query is ""
-    And the most popular categories returned by userHistory web service are
-      | 124901 |
-      | 100001 |
-    And there is no result from the search for categoryId "124901"
-    And the search results for categoryId "100001" is
-      | offerId | offerTitle  |
-      |       4 | offerTitle4 |
-      |       5 | offerTitle5 |
-    When we call suggestions service "/Country/fr/Suggestions"
-    Then the suggestions service call is a success
+    And he is "4" years old
+    And the popular categories for this age are
+      | categoryId | categoryName  |
+      | cat1       | categoryName1 |
+      | cat2       | categoryName2 |
+      | cat3       | categoryName3 |
+    And the available books for categories "cat1,cat2,cat3" are
+      | bookId | bookTitle | categoryId |
+      | b11    | book11    | cat1       |
+      | b21    | book21    | cat2       |
+      | b31    | book31    | cat3       |
+    When we ask for "3" suggestions
     Then the suggestions are
-      | offerId | offerTitle  |
-      |       4 | offerTitle4 |
-      |       5 | offerTitle5 |
-    And userHistory web service has been called to create the user "user1"
+      | bookId | bookTitle | categoryId |
+      | b11    | book11    | cat1       |
+      | b21    | book21    | cat2       |
+      | b31    | book31    | cat3       |
+      
+  @level_1_specification @nominal_case @valid
+  Scenario: limit the number of suggestions
 
-  @level_0_high_level @nominal_case @valid
-  Scenario: admin For a known user, suggest the offers corresponding to his last query
-    Given a known user
-    When the suggestion service is called
-    Then offers from his last query are returned
+    Given the user "user1"
+    And he is "4" years old
+    And the popular categories for this age are
+      | categoryId | categoryName  |
+      | cat1       | categoryName1 |
+      | cat2       | categoryName2 |
+      | cat3       | categoryName3 |
+    And the available books for categories "cat1,cat2,cat3" are
+      | bookId | bookTitle | categoryId |
+      | b11    | book11    | cat1       |
+      | b21    | book21    | cat2       |
+      | b31    | book31    | cat3       |
+    When we ask for "2" suggestions
+    Then the suggestions are
+      | bookId | bookTitle | categoryId |
+      | b11    | book11    | cat1       |
+      | b21    | book21    | cat2       |
+      
+  @level_1_specification @nominal_case @valid
+  Scenario: the user have never booked the suggestions
+
+    Given the user "user1"
+    And he is "4" years old
+    And the popular categories for this age are
+      | categoryId | categoryName  |
+      | cat1       | categoryName1 |
+    And the available books for categories "cat1" are
+      | bookId | bookTitle | categoryId |
+      | b11    | book11    | cat1       |
+      | b12    | book12    | cat1       |
+    And the user has already booked the following books
+      | bookId | bookTitle | categoryId |
+      | b11    | book11    | cat1       |
+    When we ask for "3" suggestions
+    Then the suggestions are
+      | bookId | bookTitle | categoryId |
+      | b12    | book12    | cat1       |
+
 
   @level_1_specification @nominal_case @valid
-  Scenario: admin For a known user, suggest the offers corresponding to his last query
+  Scenario: the books are comming from different categories
+
     Given the user "user1"
-    And the userHistory web service have history on "user1"
-    And the query is ""
-    And the last query of "user1" returned by userHistory web service is "sophie la girafe"
-    And the search results for the query "sophie la girafe" are
-      | offerId | offerTitle  |
-      |       7 | offerTitle7 |
-      |       8 | offerTitle8 |
-      |       9 | offerTitle9 |
-    When we call suggestions service "/Country/fr/Suggestions"
-    Then the suggestions service call is a success
+    And he is "4" years old
+    And the popular categories for this age are
+      | categoryId | categoryName  |
+      | cat1       | categoryName1 |
+      | cat2       | categoryName2 |
+      | cat3       | categoryName3 |
+    And the available books for categories "cat1,cat2,cat3" are
+      | bookId | bookTitle | categoryId |
+      | b11    | book11    | cat1       |
+      | b12    | book12    | cat1       |
+      | b21    | book21    | cat2       |
+      | b22    | book22    | cat2       |
+      | b31    | book31    | cat3       |
+    When we ask for "3" suggestions
     Then the suggestions are
-      | offerId | offerTitle  |
-      |       7 | offerTitle7 |
-      |       8 | offerTitle8 |
-      |       9 | offerTitle9 |
-    And userHistory web service has been called to create the user "user1"
+      | bookId | bookTitle | categoryId |
+      | b11    | book11    | cat1       |
+      | b21    | book21    | cat2       |
+      | b31    | book31    | cat3       |
 
-  @level_1_specification @error_case @valid
-  Scenario: admin As the search is failing, the system answer that the service is unavailable.
-    Given the search is failing
-    And the userHistory web service is working properly
-    When we call suggestions service "/Country/fr/Suggestions"
-    Then the suggestions service answer that the service is not available
 
- 
+  @level_1_specification @limit_case @future
+  Scenario: not enough suggestions,
+            the books can come from the same categories
+            
+
+    Given the user "user1"
+    And he is "4" years old
+    And the popular categories for this age are
+      | categoryId | categoryName  |
+      | cat1       | categoryName1 |
+      | cat2       | categoryName2 |
+      | cat3       | categoryName3 |
+    And the search results for categories "cat1,cat2,cat3" are
+      | bookId | bookTitle | categoryId |
+      | b11    | book11    | cat1       |
+      | b12    | book12    | cat1       |
+      | b21    | book22    | cat2       |
+      | b22    | book22    | cat2       |
+    And the user has already reserved the following books
+      | bookId | bookTitle | categoryId |
+      | b11    | book11    | cat1       |
+    When we ask for "3" suggestions
+    Then the suggestions are
+      | bookId | bookTitle | categoryId |
+      | b12    | book12    | cat1       |
+      | b21    | book22    | cat2       |
+      | b22    | book22    | cat2       |
+      
+      

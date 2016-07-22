@@ -20,7 +20,7 @@ public class SuggestionsMarshaller {
 			Unmarshaller unmarshaller = jc.createUnmarshaller();
 			return (Suggestions) unmarshaller.unmarshal(sr);
 		} catch (JAXBException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(suggestionsAsString,e );
 		}
 	}
 

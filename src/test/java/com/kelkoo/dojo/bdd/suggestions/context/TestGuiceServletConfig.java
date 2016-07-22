@@ -15,21 +15,10 @@ public class TestGuiceServletConfig {
 	
 	@Test
 	public void testLoadProperties() throws Exception {
-		assertThat(properties.get("active.countries").toString(), equalTo( "fr,uk" ));
-        assertThat(properties.get("search.fr.url").toString(), equalTo( "http://dc1-s6-dev-r410-01.dev.dc1.kelkoo.net:8080/searchsolrnodefr/fr" ));
-        assertThat(properties.get("search.uk.url").toString(), equalTo( "http://dc1-s6-dev-r410-01.dev.dc1.kelkoo.net:8085/searchsolrnodeuk/uk" ));
+        assertThat(properties.get("search.ws.url").toString(), equalTo( "http://localhost:8082/search" ));
+        assertThat(properties.get("categories.ws.url").toString(), equalTo( "http://localhost:8081/category" ));
+        assertThat(properties.get("users.ws.url").toString(), equalTo( "http://localhost:8080/user" ));
 	}
-
 	
-	@Test
-	public void testActiveCountries() throws Exception {
-		assertThat(config.getActiveCountries(), equalTo( new String[] {"fr","uk"} ));
-	}
-
-	@Test
-	public void testSearchUrl() throws Exception {
-		assertThat(config.getSearchUrl("fr"), equalTo( properties.get("search.fr.url").toString() ));
-	}
-
 	
 }
