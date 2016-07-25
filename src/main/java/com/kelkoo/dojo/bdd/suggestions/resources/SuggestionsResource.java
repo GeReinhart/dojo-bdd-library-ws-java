@@ -1,10 +1,15 @@
 package com.kelkoo.dojo.bdd.suggestions.resources;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -72,6 +77,29 @@ public class SuggestionsResource {
 		if (booksForSuggestions.size() > maxResults) {
 			booksForSuggestions = booksForSuggestions.subList(0, maxResults);
 		}
+		
+		if (booksForSuggestions.size() < maxResults) {
+			booksForSuggestions.clear();
+			Map<String,Deque<Book>> bookByCategories = new HashMap<String, Deque<Book>>();
+			for (Book book : books) {
+				if ( !bookByCategories.containsKey(book.getCategoryId()) ){
+					bookByCategories.put(book.getCategoryId(), new ArrayDeque<Book>()) ;
+				}
+				bookByCategories.get(book.getCategoryId()).add(book);
+			}
+			boolean hasABook = true ;
+			while( booksForSuggestions.size() < maxResults &&  booksForSuggestions.size() < books.size() && hasABook ){
+				hasABook = false ;
+				for (String category : bookByCategories.keySet()  ){
+					Book book =  bookByCategories.get(category).pollFirst() ;
+					hasABook = book != null || hasABook ; 
+					if ( book != null &&  ! user.hasAlreadyBooked(book) ) {
+						booksForSuggestions.add(book);
+					}
+				}
+			}
+		}
+		
 
 		suggestions.addSuggestionsAsBooks(booksForSuggestions);
 		LOGGER.debug("Return " + suggestions);
