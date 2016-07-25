@@ -1,6 +1,7 @@
 package com.kelkoo.dojo.bdd.suggestions.bdd;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
@@ -22,6 +23,7 @@ import com.kelkoo.dojo.bdd.suggestions.representations.Suggestion;
 import com.kelkoo.dojo.bdd.suggestions.representations.Suggestions;
 import com.kelkoo.dojo.bdd.suggestions.representations.SuggestionsMarshaller;
 import com.kelkoo.dojo.bdd.suggestions.server.EmbeddedSuggestionsWSServer;
+import com.sun.jersey.api.NotFoundException;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 
@@ -80,6 +82,18 @@ public class BDDSuggestionsWSScenarioSteps {
 		when(usersWSClientMock.retrieveUser(user.getUserId())).thenReturn(user);
 	}
 
+	@Given("^he is unknown$")
+	public void given_he_is_unknown() throws Throwable {
+		given_the_user_from_http_localhost_user_user_return_http_status(user.getUserId(), 404);
+	}
+	
+	@Given("^the user from http://localhost:8080/user/([^\"]*) return http status \"([^\"]*)\"$")
+	public void given_the_user_from_http_localhost_user_user_return_http_status(String userId, Integer httpStatus) throws Throwable {
+		if ( httpStatus == 404 ){
+			when(usersWSClientMock.retrieveUser(userId)).thenThrow(new NotFoundException());
+		}
+	}
+	
 	@Given("^the popular categories for this age are$")
 	public void given_the_popular_categories_for_this_age_are(List<Category> popularCategoriesGivenAgeUser)
 			throws Throwable {
@@ -121,13 +135,27 @@ public class BDDSuggestionsWSScenarioSteps {
 		wsSuggestionsResponse = client.resource(suggestionsUrl).accept("application/xml").get(ClientResponse.class);
 	}
 	
-	@Then("^the suggestions are$")
-	public void then_the_suggestions_are(List<Suggestion> expectedSuggestions) throws Throwable {
-		SuggestionsMarshaller suggestionsMarshaller = new SuggestionsMarshaller();
-		Suggestions actualSuggestions = suggestionsMarshaller.deserialize(wsSuggestionsResponse.getEntity(String.class));
-		checkSameSuggestions(actualSuggestions, expectedSuggestions);
+	@Then("^there is no suggestions$")
+	public void then_there_is_no_suggestions() throws Throwable {
+		then_the_suggestions_are(new ArrayList<Suggestion>());
 	}
 	
+	@Then("^the suggestions are$")
+	public void then_the_suggestions_are(List<Suggestion> expectedSuggestions) throws Throwable {
+		if (expectedSuggestions.isEmpty()){
+			the_http_code_is(404);	
+		}else{
+			the_http_code_is(200);
+			SuggestionsMarshaller suggestionsMarshaller = new SuggestionsMarshaller();
+		    Suggestions actualSuggestions = suggestionsMarshaller.deserialize(wsSuggestionsResponse.getEntity(String.class));
+		    checkSameSuggestions(actualSuggestions, expectedSuggestions);
+		}
+	}
+	
+	@Then("^the http code is \"([^\"]*)\"$")
+	public void the_http_code_is(Integer httpCode) throws Throwable {
+		assertThat(wsSuggestionsResponse.getStatus(), is(httpCode));
+	}
 	
 	private void checkSameSuggestions(Suggestions actualSuggestions, List<Suggestion> expectedSuggestions) {
 		assertThat(actualSuggestions.size(), equalTo(expectedSuggestions.size()));
