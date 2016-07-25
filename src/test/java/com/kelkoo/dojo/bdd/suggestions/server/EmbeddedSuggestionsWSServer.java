@@ -22,12 +22,11 @@ public class EmbeddedSuggestionsWSServer extends JerseyTest {
 	private static final String APPLICATION_XML = "application/xml";
 	private static final String PACKAGE_JERSEY_RESOURCES = "com.kelkoo.dojo.bdd.suggestions.resources";
 
-	private SuggestionsMarshaller suggestionsMarshaller = new SuggestionsMarshaller();
 	
 	public EmbeddedSuggestionsWSServer() {
 		super(new WebAppDescriptor.Builder(PACKAGE_JERSEY_RESOURCES)
 				.contextListenerClass(GuiceServletConfigWithMocks.class).filterClass(GuiceFilter.class)
-				.contextPath("suggestions").servletPath("/").build());
+				.contextPath("").servletPath("/").build());
 	}
 
 	public GuiceServletModuleWithMocks mocks() {
@@ -54,7 +53,7 @@ public class EmbeddedSuggestionsWSServer extends JerseyTest {
 		return resource().path("application.wadl").accept(APPLICATION_XML).get(ClientResponse.class); 
 	}
 
-	public ClientResponse clientResponseOnSuggestions(String relativeUrl, String userId, Integer maxResults) {
+	public ClientResponse callSuggestions(String relativeUrl, String userId, Integer maxResults) {
 		
 		WebResource webResource = resource().path(relativeUrl);
 		if (userId != null){

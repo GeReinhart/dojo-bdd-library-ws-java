@@ -117,7 +117,7 @@ Feature: Providing book suggestions
       | b21    | book22    | cat2       |
       | b22    | book22    | cat2       |
       
-  @level_2_technical_details @nominal_case @ongoing
+  @level_2_technical_details @nominal_case @valid
   Scenario: suggestions of popular and available books adpated to the age of the user
 
     Given the user from http://localhost:8080/user/user1
@@ -134,7 +134,7 @@ Feature: Providing book suggestions
       | b11    | book11    | cat1       |
       | b21    | book21    | cat2       |
       | b31    | book31    | cat3       |
-    When we ask http://localhost:8090/suggestions/user/user1&maxResults=3 
+    When we call http://localhost:9998/suggestions?userId=user1&maxResults=3
     Then the suggestions are
       | bookId | bookTitle | categoryId |
       | b11    | book11    | cat1       |

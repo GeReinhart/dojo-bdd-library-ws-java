@@ -22,6 +22,7 @@ import com.kelkoo.dojo.bdd.suggestions.representations.Suggestion;
 import com.kelkoo.dojo.bdd.suggestions.representations.Suggestions;
 import com.kelkoo.dojo.bdd.suggestions.representations.SuggestionsMarshaller;
 import com.kelkoo.dojo.bdd.suggestions.server.EmbeddedSuggestionsWSServer;
+import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 
 import cucumber.api.java.After;
@@ -30,14 +31,15 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-public class BDDSuggestionsWSSteps {
+public class BDDSuggestionsWSScenarioSteps {
 
+	private static final String SUGGESTIONS_WS_URL_TEMPLATE = "http://localhost:9998/suggestions?userId=%s&maxResults=%s";
 	private EmbeddedSuggestionsWSServer server = new EmbeddedSuggestionsWSServer();
-	private SuggestionsMarshaller suggestionsMarshaller = new SuggestionsMarshaller();
-
+	private Client client ;
+	
 	private User user;
 
-	private ClientResponse clientResponse;
+	private ClientResponse wsSuggestionsResponse;
 
 	private UsersWSClient usersWSClientMock;
 	private SearchWSClient searchWSClientMock;
@@ -46,6 +48,7 @@ public class BDDSuggestionsWSSteps {
 	@Before
 	public void beforeScenario() throws Throwable {
 		server.start();
+		client = server.client() ;
 		user = null;
 
 		usersWSClientMock = server.mocks().usersWSClientMock;
@@ -81,21 +84,27 @@ public class BDDSuggestionsWSSteps {
 	public void given_the_popular_categories_for_this_age_are(List<Category> popularCategoriesGivenAgeUser)
 			throws Throwable {
 		Boolean isPopular = true ;
-		the_categories_from_categories_ws(isPopular, user.getAge(), popularCategoriesGivenAgeUser);
+		given_the_categories_from_categories_ws(isPopular, user.getAge(), popularCategoriesGivenAgeUser);
 	}
 
 	@Given("^the categories from http://localhost:8081/category\\?popular=([^\"]*)&age=(\\d+)$")
-	public void the_categories_from_categories_ws(Boolean isPopular , Integer age, List<Category> popularCategoriesGivenAgeUser) throws Throwable {
-		when(categoriesWSClientMock.retrieveCategories( isPopular, user.getAge())).thenReturn(popularCategoriesGivenAgeUser);
+	public void given_the_categories_from_categories_ws(Boolean popular , Integer age, List<Category> popularCategoriesGivenAgeUser) throws Throwable {
+		when(categoriesWSClientMock.retrieveCategories( popular, user.getAge())).thenReturn(popularCategoriesGivenAgeUser);
 	}
 	
 	
 	@Given("^the available books for categories \"([^\"]*)\" are$")
 	public void given_the_search_results_for_categories_are(String categoryIds, List<Book> searchResult) throws Throwable {
 		Boolean available = true ;
-		when(searchWSClientMock.searchBooks(available, categoryIds.split(","))).thenReturn(searchResult);
+		given_the_books_from_search_ws(categoryIds,available, searchResult);
 	}
 
+	@Given("^the books from http://localhost:8082/search\\?categories=([^\"]*)&available=([^\"]*)$")
+	public void given_the_books_from_search_ws(String categoryIds, Boolean available, List<Book> searchResult) throws Throwable {
+		when(searchWSClientMock.searchBooks(available, categoryIds.split(","))).thenReturn(searchResult);
+	}
+	
+	
 	@Given("^the user has already booked the following books$")
 	public void given_the_user_has_already_booked_the_following_books(List<Book> alreadyBookedBooks) throws Throwable {
 		user.setAlreadyBookedBooks(alreadyBookedBooks);
@@ -104,12 +113,18 @@ public class BDDSuggestionsWSSteps {
 
 	@When("^we ask for \"([^\"]*)\" suggestions$")
 	public void when_we_ask_for_suggestions(Integer maxResults) throws Throwable {
-		clientResponse = server.clientResponseOnSuggestions("/Suggestions", user.getUserId(), maxResults);
+		when_we_call_suggestions_ws( String.format(SUGGESTIONS_WS_URL_TEMPLATE, user.getUserId(), maxResults.toString()) ) ;
 	}
-
+	
+	@When("^we call ([^\"]*)$")
+	public void when_we_call_suggestions_ws(String suggestionsUrl) throws Throwable {
+		wsSuggestionsResponse = client.resource(suggestionsUrl).accept("application/xml").get(ClientResponse.class);
+	}
+	
 	@Then("^the suggestions are$")
 	public void then_the_suggestions_are(List<Suggestion> expectedSuggestions) throws Throwable {
-		Suggestions actualSuggestions = suggestionsMarshaller.deserialize(clientResponse.getEntity(String.class));
+		SuggestionsMarshaller suggestionsMarshaller = new SuggestionsMarshaller();
+		Suggestions actualSuggestions = suggestionsMarshaller.deserialize(wsSuggestionsResponse.getEntity(String.class));
 		checkSameSuggestions(actualSuggestions, expectedSuggestions);
 	}
 	

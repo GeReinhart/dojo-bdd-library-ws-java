@@ -24,7 +24,7 @@ import com.kelkoo.dojo.bdd.suggestions.dependencies.user.UsersWSClient;
 import com.kelkoo.dojo.bdd.suggestions.representations.Suggestions;
 
 @RequestScoped
-@Path("/Suggestions")
+@Path("/suggestions")
 public class SuggestionsResource {
 
 	private static final Logger LOGGER = Logger.getLogger(SuggestionsResource.class);
