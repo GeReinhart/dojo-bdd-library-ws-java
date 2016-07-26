@@ -1,7 +1,7 @@
 Feature: Providing book suggestions
 
 
-  @level_0_high_level @nominal_case @ongoing
+  @level_0_high_level @nominal_case @valid
   Scenario: providing book suggestions
 
     Given a user
