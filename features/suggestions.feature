@@ -173,7 +173,7 @@ Feature: Providing book suggestions
     When we call http://localhost:9998/suggestions?userId=user2&maxResults=3
     Then the http code is "404"
     
-  @level_1_specification @error_case @valid
+  @level_2_technical_details @error_case @valid
   Scenario: one service on which the suggestion system is down 
 
     Given the user from http://localhost:8080/user/user2 return http status "500"
