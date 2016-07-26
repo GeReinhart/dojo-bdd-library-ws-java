@@ -1,17 +1,10 @@
 package com.kelkoo.dojo.bdd.suggestions.server;
 
-import java.io.StringReader;
 import java.net.URI;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import com.google.inject.servlet.GuiceFilter;
 import com.kelkoo.dojo.bdd.suggestions.context.GuiceServletConfigWithMocks;
 import com.kelkoo.dojo.bdd.suggestions.context.GuiceServletModuleWithMocks;
-import com.kelkoo.dojo.bdd.suggestions.representations.Suggestions;
-import com.kelkoo.dojo.bdd.suggestions.representations.SuggestionsMarshaller;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.test.framework.JerseyTest;

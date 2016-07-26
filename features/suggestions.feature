@@ -122,6 +122,14 @@ Feature: Providing book suggestions
     And he is unknown
     When we ask for "3" suggestions
     Then there is no suggestions
+
+  @level_1_specification @error_case @valid
+  Scenario: one service on which the suggestion system is down 
+
+    Given the user "user1"
+    And impossible to get information on the user
+    When we ask for "3" suggestions
+    Then the system is temporary unavaiable
       
   @level_2_technical_details @nominal_case @valid
   Scenario: suggestions of popular and available books adpated to the age of the user
@@ -149,10 +157,17 @@ Feature: Providing book suggestions
       | b31    | book31    | cat3       |
       
 
-  @level_2_technical_details @nominal_case @valid
+  @level_2_technical_details @limit_case @valid
   Scenario: unknown user, no suggestion
 
-    Given the user from http://localhost:8080/user/user2 return http status "404" 
+    Given the user from http://localhost:8080/user/user2 return http status "404"
     When we call http://localhost:9998/suggestions?userId=user2&maxResults=3
     Then the http code is "404"
+    
+  @level_1_specification @error_case @valid
+  Scenario: one service on which the suggestion system is down 
+
+    Given the user from http://localhost:8080/user/user2 return http status "500"
+    When we call http://localhost:9998/suggestions?userId=user2&maxResults=3
+    Then the http code is "503"    
       

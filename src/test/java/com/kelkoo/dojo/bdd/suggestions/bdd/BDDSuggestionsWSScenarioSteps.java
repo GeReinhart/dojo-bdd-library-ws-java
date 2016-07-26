@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.WebApplicationException;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.kelkoo.dojo.bdd.suggestions.dependencies.category.CategoriesWSClient;
@@ -35,6 +37,10 @@ import cucumber.api.java.en.When;
 
 public class BDDSuggestionsWSScenarioSteps {
 
+	private static final int HTTP_200_OK = 200;
+	private static final int HTTP_404_NOT_FOUND = 404;
+	private static final int HTTP_500_INTERNAL_SERVER_ERROR = 500;
+	private static final int HTTP_503_SERIVCE_UNAVAILABLE = 503;
 	private static final String SUGGESTIONS_WS_URL_TEMPLATE = "http://localhost:9998/suggestions?userId=%s&maxResults=%s";
 	private EmbeddedSuggestionsWSServer server = new EmbeddedSuggestionsWSServer();
 	private Client client ;
@@ -51,7 +57,7 @@ public class BDDSuggestionsWSScenarioSteps {
 	public void beforeScenario() throws Throwable {
 		server.start();
 		client = server.client() ;
-		user = null;
+		user = new User();
 
 		usersWSClientMock = server.mocks().usersWSClientMock;
 		searchWSClientMock = server.mocks().searchClientMock;
@@ -65,33 +71,42 @@ public class BDDSuggestionsWSScenarioSteps {
 
 	@Given("^the user \"([^\"]*)\"$")
 	public void given_the_user(String userId) throws Throwable {
-		this.user = new User(userId);
+		user.setUserId(userId);
 		given_the_user_from_user_ws( this.user.getUserId(), new UserStep(user).fields   );
 	}
 
 	@Given("^he is \"([^\"]*)\" years old$")
 	public void given_he_is_years_old(Integer age) throws Throwable {
-		this.user.setAge(age);
-		given_the_user_from_user_ws( this.user.getUserId(), new UserStep(user).fields   );
+		user.setAge(age);
+		given_the_user_from_user_ws( user.getUserId(), new UserStep(user).fields   );
 	}
 	
 	@Given("^the user from http://localhost:8080/user/([^\"]*)$")
 	public void given_the_user_from_user_ws(String userId, List<FieldValue> values) throws Throwable {
 		FieldValues fieldsValues = new FieldValues(values);
-		this.user = new User(userId , fieldsValues.getAsInteger("age") );
+		user.setUserId(userId);
+		user.setAge(fieldsValues.getAsInteger("age"));
 		when(usersWSClientMock.retrieveUser(user.getUserId())).thenReturn(user);
 	}
 
 	@Given("^he is unknown$")
 	public void given_he_is_unknown() throws Throwable {
-		given_the_user_from_http_localhost_user_user_return_http_status(user.getUserId(), 404);
+		given_the_user_from_http_localhost_user_user_return_http_status(user.getUserId(), HTTP_404_NOT_FOUND);
 	}
 	
 	@Given("^the user from http://localhost:8080/user/([^\"]*) return http status \"([^\"]*)\"$")
 	public void given_the_user_from_http_localhost_user_user_return_http_status(String userId, Integer httpStatus) throws Throwable {
-		if ( httpStatus == 404 ){
+		if ( httpStatus == HTTP_404_NOT_FOUND ){
 			when(usersWSClientMock.retrieveUser(userId)).thenThrow(new NotFoundException());
 		}
+		if ( httpStatus == HTTP_500_INTERNAL_SERVER_ERROR ){
+			when(usersWSClientMock.retrieveUser(userId)).thenThrow(new WebApplicationException());
+		}
+	}
+	
+	@Given("^impossible to get information on the user$")
+	public void impossible_to_get_information_on_the_user() throws Throwable {
+		given_the_user_from_http_localhost_user_user_return_http_status(user.getUserId(), HTTP_500_INTERNAL_SERVER_ERROR);
 	}
 	
 	@Given("^the popular categories for this age are$")
@@ -143,13 +158,18 @@ public class BDDSuggestionsWSScenarioSteps {
 	@Then("^the suggestions are$")
 	public void then_the_suggestions_are(List<Suggestion> expectedSuggestions) throws Throwable {
 		if (expectedSuggestions.isEmpty()){
-			the_http_code_is(404);	
+			the_http_code_is(HTTP_404_NOT_FOUND);	
 		}else{
-			the_http_code_is(200);
+			the_http_code_is(HTTP_200_OK);
 			SuggestionsMarshaller suggestionsMarshaller = new SuggestionsMarshaller();
 		    Suggestions actualSuggestions = suggestionsMarshaller.deserialize(wsSuggestionsResponse.getEntity(String.class));
 		    checkSameSuggestions(actualSuggestions, expectedSuggestions);
 		}
+	}
+
+	@Then("^the system is temporary unavaiable$")
+	public void the_system_is_temporary_unavaiable() throws Throwable {
+		the_http_code_is(HTTP_503_SERIVCE_UNAVAILABLE) ;
 	}
 	
 	@Then("^the http code is \"([^\"]*)\"$")

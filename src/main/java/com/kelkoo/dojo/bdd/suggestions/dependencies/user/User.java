@@ -28,6 +28,9 @@ public class User {
 		this.alreadyBookedBooks = alreadyBookedBooks;
 	}
 	
+	public User() {
+	}
+
 	public String getUserId() {
 		return userId;
 	}
