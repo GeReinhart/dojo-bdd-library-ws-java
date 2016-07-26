@@ -42,6 +42,7 @@ public class BDDSuggestionsWSScenarioSteps {
 	private static final int HTTP_404_NOT_FOUND = 404;
 	private static final int HTTP_500_INTERNAL_SERVER_ERROR = 500;
 	private static final int HTTP_503_SERIVCE_UNAVAILABLE = 503;
+	
 	private static final String SUGGESTIONS_WS_URL_TEMPLATE = "http://localhost:9998/suggestions?userId=%s&maxResults=%s";
 	
 	private EmbeddedSuggestionsWSServer server = new EmbeddedSuggestionsWSServer();
@@ -136,8 +137,7 @@ public class BDDSuggestionsWSScenarioSteps {
 
 	@Given("^the user has already booked the following books$")
 	public void given_the_user_has_already_booked_the_following_books(List<Book> alreadyBookedBooks) throws Throwable {
-		user.setAlreadyBookedBooks(alreadyBookedBooks);
-		when(usersWSClientMock.retrieveUser(user.getUserId())).thenReturn(user);
+		given_the_books_from_user_ws(user.getUserId(),alreadyBookedBooks);
 	}
 
 	@When("^we ask for \"([^\"]*)\" suggestions$")
@@ -174,7 +174,7 @@ public class BDDSuggestionsWSScenarioSteps {
 	
 	// Level 2: Technical details
 	
-	@Given("^the user from http://localhost:8080/user/([^\"]*)$")
+	@Given("^the user from http://my.library.com/user/([^\"]*)$")
 	public void given_the_user_from_user_ws(String userId, List<FieldValue> values) throws Throwable {
 		FieldValues fieldsValues = new FieldValues(values);
 		user.setUserId(userId);
@@ -182,7 +182,7 @@ public class BDDSuggestionsWSScenarioSteps {
 		when(usersWSClientMock.retrieveUser(user.getUserId())).thenReturn(user);
 	}
 
-	@Given("^the user from http://localhost:8080/user/([^\"]*) return http status \"([^\"]*)\"$")
+	@Given("^the user from http://my.library.com/user/([^\"]*) return http status \"([^\"]*)\"$")
 	public void given_the_user_from_user_ws_http_status(String userId, Integer httpStatus) throws Throwable {
 		if ( httpStatus == HTTP_404_NOT_FOUND ){
 			when(usersWSClientMock.retrieveUser(userId)).thenThrow(new NotFoundException());
@@ -192,15 +192,21 @@ public class BDDSuggestionsWSScenarioSteps {
 		}
 	}
 	
-	@Given("^the categories from http://localhost:8081/category\\?popular=([^\"]*)&age=(\\d+)$")
+	@Given("^the categories from http://my.library.com/category\\?popular=([^\"]*)&age=(\\d+)$")
 	public void given_the_categories_from_categories_ws(Boolean popular , Integer age, List<Category> popularCategoriesGivenAgeUser) throws Throwable {
 		when(categoriesWSClientMock.retrieveCategories( popular, user.getAge())).thenReturn(popularCategoriesGivenAgeUser);
 	}
 
-	@Given("^the books from http://localhost:8082/search\\?categories=([^\"]*)&available=([^\"]*)$")
+	@Given("^the books from http://my.library.com/search\\?categories=([^\"]*)&available=([^\"]*)$")
 	public void given_the_books_from_search_ws(String categoryIds, Boolean available, List<Book> searchResult) throws Throwable {
 		when(searchWSClientMock.searchBooks(available, categoryIds.split(","))).thenReturn(searchResult);
 	}	
+	
+	@Given("^the books from http://my.library.com/user/([^\"]*)/books$")
+	public void given_the_books_from_user_ws(String userId,List<Book> alreadyBookedBooks) throws Throwable {
+		user.setAlreadyBookedBooks(alreadyBookedBooks);
+		when(usersWSClientMock.retrieveUser(userId)).thenReturn(user);
+	}
 	
 	@Then("^the http code is \"([^\"]*)\"$")
 	public void the_http_code_is(Integer httpCode) throws Throwable {
