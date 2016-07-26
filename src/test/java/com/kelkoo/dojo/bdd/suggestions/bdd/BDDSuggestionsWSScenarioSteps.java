@@ -1,5 +1,6 @@
 package com.kelkoo.dojo.bdd.suggestions.bdd;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -42,6 +43,7 @@ public class BDDSuggestionsWSScenarioSteps {
 	private static final int HTTP_500_INTERNAL_SERVER_ERROR = 500;
 	private static final int HTTP_503_SERIVCE_UNAVAILABLE = 503;
 	private static final String SUGGESTIONS_WS_URL_TEMPLATE = "http://localhost:9998/suggestions?userId=%s&maxResults=%s";
+	
 	private EmbeddedSuggestionsWSServer server = new EmbeddedSuggestionsWSServer();
 	private Client client ;
 	
@@ -69,6 +71,34 @@ public class BDDSuggestionsWSScenarioSteps {
 		server.stop();
 	}
 
+	
+	// Level 0: High Level
+	
+	@Given("^a user$")
+	public void given_a_user() throws Throwable {
+		given_the_user("userId1");
+		given_he_is_years_old(4);
+		given_the_popular_categories_for_this_age_are(asList( new Category("cat1","category1"), new Category("cat2","category2")  ));
+		given_the_search_results_for_categories_are("cat1,cat2", 
+				                                    asList( new Book("b11","book11","cat1" ),
+				                                    		new Book("b21","book21","cat2" ),
+				                                    		new Book("b31","book31","cat3" )));
+	}
+
+	@When("^we ask for suggestions$")
+	public void when_we_ask_for_suggestions() throws Throwable {
+	    when_we_ask_for_suggestions(3);
+	}
+
+	@Then("^the suggestions are popular and available books adpated to the age of the user$")
+	public void then_the_suggestions_are_popular_and_available_books_adpated_to_the_age_of_the_user() throws Throwable {
+	    then_the_suggestions_are(asList( new Suggestion("b11","book11","cat1" ),
+				                         new Suggestion("b21","book21","cat2" ),
+				                         new Suggestion("b31","book31","cat3" )));
+	}
+		
+	// Level 1: Specifications
+	
 	@Given("^the user \"([^\"]*)\"$")
 	public void given_the_user(String userId) throws Throwable {
 		user.setUserId(userId);
@@ -81,32 +111,14 @@ public class BDDSuggestionsWSScenarioSteps {
 		given_the_user_from_user_ws( user.getUserId(), new UserStep(user).fields   );
 	}
 	
-	@Given("^the user from http://localhost:8080/user/([^\"]*)$")
-	public void given_the_user_from_user_ws(String userId, List<FieldValue> values) throws Throwable {
-		FieldValues fieldsValues = new FieldValues(values);
-		user.setUserId(userId);
-		user.setAge(fieldsValues.getAsInteger("age"));
-		when(usersWSClientMock.retrieveUser(user.getUserId())).thenReturn(user);
-	}
-
 	@Given("^he is unknown$")
 	public void given_he_is_unknown() throws Throwable {
-		given_the_user_from_http_localhost_user_user_return_http_status(user.getUserId(), HTTP_404_NOT_FOUND);
-	}
-	
-	@Given("^the user from http://localhost:8080/user/([^\"]*) return http status \"([^\"]*)\"$")
-	public void given_the_user_from_http_localhost_user_user_return_http_status(String userId, Integer httpStatus) throws Throwable {
-		if ( httpStatus == HTTP_404_NOT_FOUND ){
-			when(usersWSClientMock.retrieveUser(userId)).thenThrow(new NotFoundException());
-		}
-		if ( httpStatus == HTTP_500_INTERNAL_SERVER_ERROR ){
-			when(usersWSClientMock.retrieveUser(userId)).thenThrow(new WebApplicationException());
-		}
+		given_the_user_from_user_ws_http_status(user.getUserId(), HTTP_404_NOT_FOUND);
 	}
 	
 	@Given("^impossible to get information on the user$")
 	public void impossible_to_get_information_on_the_user() throws Throwable {
-		given_the_user_from_http_localhost_user_user_return_http_status(user.getUserId(), HTTP_500_INTERNAL_SERVER_ERROR);
+		given_the_user_from_user_ws_http_status(user.getUserId(), HTTP_500_INTERNAL_SERVER_ERROR);
 	}
 	
 	@Given("^the popular categories for this age are$")
@@ -116,24 +128,12 @@ public class BDDSuggestionsWSScenarioSteps {
 		given_the_categories_from_categories_ws(isPopular, user.getAge(), popularCategoriesGivenAgeUser);
 	}
 
-	@Given("^the categories from http://localhost:8081/category\\?popular=([^\"]*)&age=(\\d+)$")
-	public void given_the_categories_from_categories_ws(Boolean popular , Integer age, List<Category> popularCategoriesGivenAgeUser) throws Throwable {
-		when(categoriesWSClientMock.retrieveCategories( popular, user.getAge())).thenReturn(popularCategoriesGivenAgeUser);
-	}
-	
-	
 	@Given("^the available books for categories \"([^\"]*)\" are$")
 	public void given_the_search_results_for_categories_are(String categoryIds, List<Book> searchResult) throws Throwable {
 		Boolean available = true ;
 		given_the_books_from_search_ws(categoryIds,available, searchResult);
 	}
 
-	@Given("^the books from http://localhost:8082/search\\?categories=([^\"]*)&available=([^\"]*)$")
-	public void given_the_books_from_search_ws(String categoryIds, Boolean available, List<Book> searchResult) throws Throwable {
-		when(searchWSClientMock.searchBooks(available, categoryIds.split(","))).thenReturn(searchResult);
-	}
-	
-	
 	@Given("^the user has already booked the following books$")
 	public void given_the_user_has_already_booked_the_following_books(List<Book> alreadyBookedBooks) throws Throwable {
 		user.setAlreadyBookedBooks(alreadyBookedBooks);
@@ -172,10 +172,41 @@ public class BDDSuggestionsWSScenarioSteps {
 		the_http_code_is(HTTP_503_SERIVCE_UNAVAILABLE) ;
 	}
 	
+	// Level 2: Technical details
+	
+	@Given("^the user from http://localhost:8080/user/([^\"]*)$")
+	public void given_the_user_from_user_ws(String userId, List<FieldValue> values) throws Throwable {
+		FieldValues fieldsValues = new FieldValues(values);
+		user.setUserId(userId);
+		user.setAge(fieldsValues.getAsInteger("age"));
+		when(usersWSClientMock.retrieveUser(user.getUserId())).thenReturn(user);
+	}
+
+	@Given("^the user from http://localhost:8080/user/([^\"]*) return http status \"([^\"]*)\"$")
+	public void given_the_user_from_user_ws_http_status(String userId, Integer httpStatus) throws Throwable {
+		if ( httpStatus == HTTP_404_NOT_FOUND ){
+			when(usersWSClientMock.retrieveUser(userId)).thenThrow(new NotFoundException());
+		}
+		if ( httpStatus == HTTP_500_INTERNAL_SERVER_ERROR ){
+			when(usersWSClientMock.retrieveUser(userId)).thenThrow(new WebApplicationException());
+		}
+	}
+	
+	@Given("^the categories from http://localhost:8081/category\\?popular=([^\"]*)&age=(\\d+)$")
+	public void given_the_categories_from_categories_ws(Boolean popular , Integer age, List<Category> popularCategoriesGivenAgeUser) throws Throwable {
+		when(categoriesWSClientMock.retrieveCategories( popular, user.getAge())).thenReturn(popularCategoriesGivenAgeUser);
+	}
+
+	@Given("^the books from http://localhost:8082/search\\?categories=([^\"]*)&available=([^\"]*)$")
+	public void given_the_books_from_search_ws(String categoryIds, Boolean available, List<Book> searchResult) throws Throwable {
+		when(searchWSClientMock.searchBooks(available, categoryIds.split(","))).thenReturn(searchResult);
+	}	
+	
 	@Then("^the http code is \"([^\"]*)\"$")
 	public void the_http_code_is(Integer httpCode) throws Throwable {
 		assertThat(wsSuggestionsResponse.getStatus(), is(httpCode));
 	}
+	
 	
 	private void checkSameSuggestions(Suggestions actualSuggestions, List<Suggestion> expectedSuggestions) {
 		assertThat(actualSuggestions.size(), equalTo(expectedSuggestions.size()));

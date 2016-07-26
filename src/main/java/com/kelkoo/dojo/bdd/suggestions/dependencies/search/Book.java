@@ -8,6 +8,20 @@ public class Book {
 
 	private String categoryId ;
 
+	
+	public Book(){
+		
+	}
+
+	public Book(String bookId, String bookTitle, String categoryId) {
+		super();
+		this.bookId = bookId;
+		this.bookTitle = bookTitle;
+		this.categoryId = categoryId;
+	}
+
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

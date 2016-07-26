@@ -1,5 +1,14 @@
 Feature: Providing book suggestions
 
+
+  @level_0_high_level @nominal_case @ongoing
+  Scenario: providing book suggestions
+
+    Given a user
+    When we ask for suggestions
+    Then the suggestions are popular and available books adpated to the age of the user
+
+
   @level_1_specification @nominal_case @valid
   Scenario: suggestions of popular and available books adpated to the age of the user
 
