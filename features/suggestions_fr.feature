@@ -1,167 +1,167 @@
-Feature: Providing book suggestions
+Feature: Fournir des suggestions de livres
 
   @level_0_high_level @nominal_case @valid
-  Scenario: providing book suggestions
-    Given a user
-    When we ask for suggestions
-    Then the suggestions are popular and available books adpated to the age of the user
+  Scenario: fournir des suggestions de livres
+    Given un utilisateur
+    When on demande suggestions
+    Then les suggestions proposées sont populaires, disponibles et adaptées à l age de l utilisateur
 
   @level_1_specification @nominal_case @valid
   Scenario: suggestions of popular and available books adpated to the age of the user
-    Given the user "Tim"
-    And he is "4" years old
-    And the popular categories for this age are
+    Given l utilisateur "Tim"
+    And il a "4" ans
+    And les catégories populaires pour cet age sont
       | categoryId | categoryName           |
       | cat1       | Coloriage              |
       | cat2       | Comptines              |
       | cat3       | Histoires pour le dodo |
-    And the available books for categories "cat1,cat2,cat3" are
+    And les livres disponibles pour les catégories "cat1,cat2,cat3" sont
       | bookId | bookTitle             | categoryId |
       | b11    | Colorier les poules   | cat1       |
       | b21    | Comptines de la ferme | cat2       |
       | b31    | Histoires de la mer   | cat3       |
-    When we ask for "3" suggestions
-    Then the suggestions are
+    When on demande "3" suggestions
+    Then les suggestions sont
       | bookId | bookTitle             | categoryId |
       | b11    | Colorier les poules   | cat1       |
       | b21    | Comptines de la ferme | cat2       |
       | b31    | Histoires de la mer   | cat3       |
 
   @level_1_specification @nominal_case @valid
-  Scenario: limit the number of suggestions
-    Given the user "Tim"
-    And he is "4" years old
-    And the popular categories for this age are
+  Scenario: limiter le nombre de suggestions
+    Given l utilisateur "Tim"
+    And il a "4" ans
+    And les catégories populaires pour cet age sont
       | categoryId | categoryName           |
       | cat1       | Coloriage              |
       | cat2       | Comptines              |
       | cat3       | Histoires pour le dodo |
-    And the available books for categories "cat1,cat2,cat3" are
+    And les livres disponibles pour les catégories "cat1,cat2,cat3" sont
       | bookId | bookTitle             | categoryId |
       | b11    | Colorier les poules   | cat1       |
       | b21    | Comptines de la ferme | cat2       |
       | b31    | Histoires de la mer   | cat3       |
-    When we ask for "2" suggestions
-    Then the suggestions are
+    When on demande "2" suggestions
+    Then les suggestions sont
       | bookId | bookTitle             | categoryId |
       | b11    | Colorier les poules   | cat1       |
       | b21    | Comptines de la ferme | cat2       |
 
   @level_1_specification @nominal_case @valid
-  Scenario: the user have never booked the suggestions
-    Given the user "Tim"
-    And he is "4" years old
-    And the popular categories for this age are
+  Scenario: l utilisateur n a jamais reservé les livres qu on lui suggère
+    Given l utilisateur "Tim"
+    And il a "4" ans
+    And les catégories populaires pour cet age sont
       | categoryId | categoryName |
       | cat1       | Coloriage    |
-    And the available books for categories "cat1" are
+    And les livres disponibles pour les catégories "cat1" sont
       | bookId | bookTitle           | categoryId |
       | b11    | Colorier les poules | cat1       |
       | b12    | Colorier les vaches | cat1       |
-    And the user has already booked the following books
+    And l utilisateur a déja reservé les livres suivants
       | bookId | bookTitle           | categoryId |
       | b11    | Colorier les poules | cat1       |
-    When we ask for "3" suggestions
-    Then the suggestions are
+    When on demande "3" suggestions
+    Then les suggestions sont
       | bookId | bookTitle           | categoryId |
       | b12    | Colorier les vaches | cat1       |
 
   @level_1_specification @nominal_case @valid
-  Scenario: the books are comming from different categories
-    Given the user "Tim"
-    And he is "4" years old
-    And the popular categories for this age are
+  Scenario: les livres suggerés proviennent de catégories différentes
+    Given l utilisateur "Tim"
+    And il a "4" ans
+    And les catégories populaires pour cet age sont
       | categoryId | categoryName           |
       | cat1       | Coloriage              |
       | cat2       | Comptines              |
       | cat3       | Histoires pour le dodo |
-    And the available books for categories "cat1,cat2,cat3" are
+    And les livres disponibles pour les catégories "cat1,cat2,cat3" sont
       | bookId | bookTitle             | categoryId |
       | b11    | Colorier les poules   | cat1       |
       | b12    | Colorier les vaches   | cat1       |
       | b21    | Comptines de la ferme | cat2       |
       | b22    | Comptines du loup     | cat2       |
       | b31    | Histoires de la mer   | cat3       |
-    When we ask for "3" suggestions
-    Then the suggestions are
+    When on demande "3" suggestions
+    Then les suggestions sont
       | bookId | bookTitle             | categoryId |
       | b11    | Colorier les poules   | cat1       |
       | b21    | Comptines de la ferme | cat2       |
       | b31    | Histoires de la mer   | cat3       |
 
   @level_1_specification @limit_case @valid
-  Scenario: not enough suggestions, the books can come from the same categories
-    Given the user "Tim"
-    And he is "4" years old
-    And the popular categories for this age are
+  Scenario: s il n y a pas assez de suggestions, on propose des livres de même catégories
+    Given l utilisateur "Tim"
+    And il a "4" ans
+    And les catégories populaires pour cet age sont
       | categoryId | categoryName           |
       | cat1       | Coloriage              |
       | cat2       | Comptines              |
       | cat3       | Histoires pour le dodo |
-    And the available books for categories "cat1,cat2,cat3" are
+    And les livres disponibles pour les catégories "cat1,cat2,cat3" sont
       | bookId | bookTitle             | categoryId |
       | b11    | Colorier les poules   | cat1       |
       | b12    | Colorier les vaches   | cat1       |
       | b21    | Comptines de la ferme | cat2       |
       | b22    | Comptines du loup     | cat2       |
-    And the user has already booked the following books
+    And l utilisateur a déja reservé les livres suivants
       | bookId | bookTitle           | categoryId |
       | b11    | Colorier les poules | cat1       |
-    When we ask for "3" suggestions
-    Then the suggestions are
+    When on demande "3" suggestions
+    Then les suggestions sont
       | bookId | bookTitle             | categoryId |
       | b12    | Colorier les vaches   | cat1       |
       | b21    | Comptines de la ferme | cat2       |
       | b22    | Comptines du loup     | cat2       |
 
   @level_1_specification @limit_case @valid
-  Scenario: unknown user, no suggestion
-    Given the user "Lise"
-    And he is unknown
-    When we ask for "3" suggestions
-    Then there is no suggestions
+  Scenario: pas de suggestion pour les utilisateurs inconnus
+    Given l utilisateur "Lise"
+    And il est inconnu 
+    When on demande "3" suggestions
+    Then il n y a pas de suggestions
 
   @level_1_specification @error_case @valid
-  Scenario: one service on which the suggestion system depends on is down
-    Given the user "Tim"
-    And impossible to get information on the user
-    When we ask for "3" suggestions
-    Then the system is temporary unavaiable
+  Scenario: un service pour lequel le systeme dépend est indisponible
+    Given l utilisateur "Tim"
+    And impossible de récupérer les informations de l utilisateur
+    When on demande "3" suggestions
+    Then le système est temporairement indisponible
 
   @level_2_technical_details @nominal_case @valid
-  Scenario: suggestions of popular and available books adpated to the age of the user, he have never booked the suggestions
-    Given the user from http://my.library.com/user/Tim
+  Scenario: les livres proposés sont populaires, disponibles, adaptés à l age de l utilisateur et celui ci ne les a jamais reservés
+    Given l utilisateur depuis le web service http://my.library.com/user/Tim
       | field  | value |
       | userId | Tim   |
       | age    | 4     |
-    And the categories from http://my.library.com/category?popular=true&age=4
+    And les catégories depuis le web service http://my.library.com/category?popular=true&age=4
       | categoryId | categoryName           |
       | cat1       | Coloriage              |
       | cat2       | Comptines              |
       | cat3       | Histoires pour le dodo |
-    And the books from http://my.library.com/search?categories=cat1,cat2,cat3&available=true
+    And les livres depuis le web service http://my.library.com/search?categories=cat1,cat2,cat3&available=true
       | bookId | bookTitle             | categoryId |
       | b11    | Colorier les poules   | cat1       |
       | b21    | Comptines de la ferme | cat2       |
       | b31    | Histoires de la mer   | cat3       |
-    And the books from http://my.library.com/user/Tim/books
+    And les livres depuis le web service http://my.library.com/user/Tim/books
       | bookId | bookTitle           | categoryId |
       | b11    | Colorier les poules | cat1       |
-    When we call http://localhost:9998/suggestions?userId=Tim&maxResults=3
-    Then the http code is "200"
-    Then the suggestions are
+    When on appelle http://localhost:9998/suggestions?userId=Tim&maxResults=3
+    Then le code http retourné est  "200"
+    Then les suggestions sont
       | bookId | bookTitle             | categoryId |
       | b21    | Comptines de la ferme | cat2       |
       | b31    | Histoires de la mer   | cat3       |
 
   @level_2_technical_details @limit_case @valid
-  Scenario: unknown user, no suggestion
-    Given the user from http://my.library.com/user/Lise return http status "404"
-    When we call http://localhost:9998/suggestions?userId=Lise&maxResults=3
-    Then the http code is "404"
+  Scenario: pas de suggestion pour les utilisateurs inconnus
+    Given l utilisateur depuis le web service http://my.library.com/user/Lise retourne un code http "404"
+    When on appelle http://localhost:9998/suggestions?userId=Lise&maxResults=3
+    Then le code http retourné est  "404"
 
   @level_2_technical_details @error_case @valid
   Scenario: one service on which the suggestion system is down
-    Given the user from http://my.library.com/user/Lise return http status "500"
-    When we call http://localhost:9998/suggestions?userId=Lise&maxResults=3
-    Then the http code is "503"
+    Given l utilisateur depuis le web service http://my.library.com/user/Lise retourne un code http "500"
+    When on appelle http://localhost:9998/suggestions?userId=Lise&maxResults=3
+    Then le code http retourné est  "503"

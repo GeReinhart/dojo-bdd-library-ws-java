@@ -12,6 +12,6 @@ import cucumber.api.junit.Cucumber;
 		"features/suggestions.feature"}, monochrome = true,
         tags = { "@valid" }
 )
-public class TestValidBDD {
+public class ValidBDDTest {
 
 }
