@@ -7,7 +7,8 @@ Feature: Fournir des suggestions de livres
     Then les suggestions proposées sont populaires, disponibles et adaptées à l age de l utilisateur
 
   @level_1_specification @nominal_case @valid
-  Scenario: suggestions of popular and available books adpated to the age of the user
+  
+  Scenario: les suggestions proposées sont populaires, disponibles et adaptées à l age de l utilisateur
     Given l utilisateur "Tim"
     And il a "4" ans
     And les catégories populaires pour cet age sont
