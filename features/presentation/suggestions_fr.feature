@@ -1,13 +1,16 @@
 Feature: Fournir des suggestions de livres
 
-  @level_0_high_level @nominal_case @valid
+  
   Scenario: fournir des suggestions de livres
     Given un utilisateur
     When on demande suggestions
-    Then les suggestions proposées sont populaires, disponibles et adaptées à l age de l utilisateur
+    Then les suggestions proposées sont populaires, disponibles 
+          et adaptées à l age de l utilisateur 
+    And  les suggestions proviennent de catégories différentes
 
-  @level_1_specification @nominal_case @valid
-  Scenario: les suggestions proposées sont populaires, disponibles et adaptées à l age de l utilisateur
+
+  Scenario: fournir des suggestions de livres
+             
     Given l utilisateur "Tim"
     And il a "4" ans
     And les catégories populaires pour cet age sont
@@ -161,7 +164,7 @@ Feature: Fournir des suggestions de livres
     Then le code http retourné est  "404"
 
   @level_2_technical_details @error_case @valid
-  Scenario: un service pour lequel le systeme dépend est indisponible
+  Scenario: one service on which the suggestion system is down
     Given l utilisateur depuis le web service http://my.library.com/user/Lise retourne un code http "500"
     When on appelle http://localhost:9998/suggestions?userId=Lise&maxResults=3
     Then le code http retourné est  "503"
