@@ -18,8 +18,8 @@
       <data key="d6">
         <y:GenericNode configuration="BevelNode">
           <y:Geometry height="833.1710815429685" width="803.7405814034595" x="1895.3665581317484" y="973.6139091873463"/>
-          <y:Fill color="#E0C398" transparent="false"/>
-          <y:BorderStyle hasColor="false" type="line" width="1.0"/>
+          <y:Fill color="#FF6600" transparent="false"/>
+          <y:BorderStyle hasColor="false" type="line" width="4.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="40" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" textColor="#000000" visible="true" width="4.0" x="399.8702907017298" y="414.58554077148415">
             <y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
@@ -107,8 +107,8 @@
       <data key="d6">
         <y:GenericNode configuration="com.yworks.bpmn.Event.withShadow">
           <y:Geometry height="993.9480710697135" width="1685.3745513941428" x="0.706207016594135" y="885.1636283191162"/>
-          <y:Fill color="#FFFFFFE6" color2="#D4D4D4CC" transparent="false"/>
-          <y:BorderStyle color="#C0C0C0" type="line" width="1.0"/>
+          <y:Fill color="#FFFFFFE6" color2="#999999" transparent="false"/>
+          <y:BorderStyle color="#808080" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="30" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" textColor="#000000" visible="true" width="4.0" x="840.6872756970712" y="494.97403553485674">
             <y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
@@ -148,8 +148,8 @@
       <data key="d6">
         <y:GenericNode configuration="com.yworks.bpmn.Event.withShadow">
           <y:Geometry height="993.9480710697135" width="1685.3745513941428" x="1470.739780409183" y="-473.66848790904623"/>
-          <y:Fill color="#FFFFFFE6" color2="#D4D4D4CC" transparent="false"/>
-          <y:BorderStyle color="#C0C0C0" type="line" width="1.0"/>
+          <y:Fill color="#FFFFFFE6" color2="#808080" transparent="false"/>
+          <y:BorderStyle color="#999999" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="30" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" textColor="#000000" visible="true" width="4.0" x="840.6872756970711" y="494.97403553485674">
             <y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
@@ -172,8 +172,8 @@
       <data key="d6">
         <y:GenericNode configuration="com.yworks.bpmn.Event.withShadow">
           <y:Geometry height="993.9480710697135" width="1685.3745513941428" x="-16.078460952156206" y="-503.19301158301255"/>
-          <y:Fill color="#FFFFFFE6" color2="#D4D4D4CC" transparent="false"/>
-          <y:BorderStyle color="#C0C0C0" type="line" width="1.0"/>
+          <y:Fill color="#FFFFFFE6" color2="#999999" transparent="false"/>
+          <y:BorderStyle color="#999999" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="30" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" textColor="#000000" visible="true" width="4.0" x="840.6872756970712" y="494.97403553485674">
             <y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
@@ -197,7 +197,7 @@
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="395.91281446986795" width="427.53925710602675" x="586.8992447856522" y="-185.8648364080898"/>
           <y:Fill color="#E8EEF7" color2="#FFFFFF" transparent="false"/>
-          <y:BorderStyle color="#000000" type="dashed" width="1.0"/>
+          <y:BorderStyle color="#000000" type="dashed" width="3.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="50" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="62.203125" modelName="custom" textColor="#000000" visible="true" width="405.9287109375" x="10.805273084263376" y="166.85484473493398">SUGGESTIONS<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
@@ -213,7 +213,7 @@
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="307.17254623503885" width="388.7479455942913" x="101.34638469149536" y="-141.49470229067524"/>
           <y:Fill color="#E8EEF7" color2="#FFFFFF" transparent="false"/>
-          <y:BorderStyle color="#000000" type="dashed" width="1.0"/>
+          <y:BorderStyle color="#000000" type="dashed" width="3.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="50" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="62.203125" modelName="custom" textColor="#000000" visible="true" width="358.4677734375" x="15.140086078395655" y="122.48471061751943">CATEGORIES<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
@@ -229,7 +229,7 @@
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="264.2003676470588" width="371.75219353019133" x="1142.3561530554625" y="-120.38260002470781"/>
           <y:Fill color="#E8EEF7" color2="#FFFFFF" transparent="false"/>
-          <y:BorderStyle color="#000000" type="dashed" width="1.0"/>
+          <y:BorderStyle color="#000000" type="dashed" width="3.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="50" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="62.203125" modelName="custom" textColor="#000000" visible="true" width="340.5478515625" x="15.602170983845554" y="100.99862132352939">RECHERCHE<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
@@ -244,7 +244,7 @@
       <data key="d6">
         <y:GenericNode configuration="BevelNode">
           <y:Geometry height="250.0" width="300.0" x="2007.23385794157" y="-286.8716944539909"/>
-          <y:Fill color="#E0C398" transparent="false"/>
+          <y:Fill color="#FF6600" transparent="false"/>
           <y:BorderStyle hasColor="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="40" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="97.125" modelName="custom" textColor="#000000" visible="true" width="277.0859375" x="11.45703125" y="76.4375">suggestions
 WebService<y:LabelModel>
@@ -261,7 +261,7 @@ WebService<y:LabelModel>
       <data key="d6">
         <y:GenericNode configuration="BevelNode">
           <y:Geometry height="250.0" width="300.0" x="2409.87613887085" y="-112.90842917315581"/>
-          <y:Fill color="#E0C398" transparent="false"/>
+          <y:Fill color="#FF6600" transparent="false"/>
           <y:BorderStyle hasColor="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="40" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="97.125" modelName="custom" textColor="#000000" visible="true" width="277.0859375" x="11.45703125" y="76.4375">suggestions
 Reports<y:LabelModel>
@@ -278,7 +278,7 @@ Reports<y:LabelModel>
       <data key="d6">
         <y:GenericNode configuration="BevelNode">
           <y:Geometry height="250.0" width="300.0" x="2030.901137353335" y="115.7231797853176"/>
-          <y:Fill color="#E0C398" transparent="false"/>
+          <y:Fill color="#FF6600" transparent="false"/>
           <y:BorderStyle hasColor="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="40" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="97.125" modelName="custom" textColor="#000000" visible="true" width="277.0859375" x="11.45703125" y="76.4375">suggestions
 Cache<y:LabelModel>
@@ -295,7 +295,7 @@ Cache<y:LabelModel>
       <data key="d6">
         <y:GenericNode configuration="BevelNode">
           <y:Geometry height="833.1710815429685" width="803.7405814034595" x="454.93687063174895" y="974.2992261508509"/>
-          <y:Fill color="#E0C398" transparent="false"/>
+          <y:Fill color="#FF6600" transparent="false"/>
           <y:BorderStyle hasColor="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="60" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="143.6875" modelName="custom" textColor="#000000" visible="true" width="413.62890625" x="195.05583757672974" y="344.74179077148415">suggestions
 WebService<y:LabelModel>
@@ -312,7 +312,7 @@ WebService<y:LabelModel>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="60.0" width="60.0" x="2245.805508988671" y="1280.8889030838302"/>
-          <y:Fill color="#FF6600" transparent="false"/>
+          <y:Fill color="#3333FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" textColor="#000000" visible="true" width="4.0" x="28.0" y="28.0">
             <y:LabelModel>
@@ -330,7 +330,7 @@ WebService<y:LabelModel>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="60.0" width="60.0" x="2117.93656556568" y="1145.8019890213302"/>
-          <y:Fill color="#FF6600" transparent="false"/>
+          <y:Fill color="#3333FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" textColor="#000000" visible="true" width="4.0" x="28.0" y="28.0">
             <y:LabelModel>
@@ -348,7 +348,7 @@ WebService<y:LabelModel>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="60.0" width="60.0" x="2067.31547181568" y="1601.7004265213302"/>
-          <y:Fill color="#FF6600" transparent="false"/>
+          <y:Fill color="#0000FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" textColor="#000000" visible="true" width="4.0" x="28.0" y="28.0">
             <y:LabelModel>
@@ -366,7 +366,7 @@ WebService<y:LabelModel>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="60.0" width="60.0" x="2117.93656556568" y="1360.1994499588302"/>
-          <y:Fill color="#FF6600" transparent="false"/>
+          <y:Fill color="#3333FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" textColor="#000000" visible="true" width="4.0" x="28.0" y="28.0">
             <y:LabelModel>
@@ -384,7 +384,7 @@ WebService<y:LabelModel>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="60.0" width="60.0" x="2492.57621400318" y="1657.9552192019917"/>
-          <y:Fill color="#FF6600" transparent="false"/>
+          <y:Fill color="#3333FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" textColor="#000000" visible="true" width="4.0" x="28.0" y="28.0">
             <y:LabelModel>
@@ -402,7 +402,7 @@ WebService<y:LabelModel>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="60.0" width="60.0" x="2203.60941712818" y="1489.8205437088302"/>
-          <y:Fill color="#FF6600" transparent="false"/>
+          <y:Fill color="#3333FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" textColor="#000000" visible="true" width="4.0" x="28.0" y="28.0">
             <y:LabelModel>
@@ -420,7 +420,7 @@ WebService<y:LabelModel>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="60.0" width="60.0" x="1956.446109224606" y="1250.3713249588302"/>
-          <y:Fill color="#FF6600" transparent="false"/>
+          <y:Fill color="#3333FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" textColor="#000000" visible="true" width="4.0" x="28.0" y="28.0">
             <y:LabelModel>
@@ -438,7 +438,7 @@ WebService<y:LabelModel>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="60.0" width="60.0" x="2395.05863587818" y="1458.6135124588302"/>
-          <y:Fill color="#FF6600" transparent="false"/>
+          <y:Fill color="#3333FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" textColor="#000000" visible="true" width="4.0" x="28.0" y="28.0">
             <y:LabelModel>
@@ -456,7 +456,7 @@ WebService<y:LabelModel>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="60.0" width="60.0" x="2440.86820619068" y="1289.8889030838302"/>
-          <y:Fill color="#FF6600" transparent="false"/>
+          <y:Fill color="#3333FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" textColor="#000000" visible="true" width="4.0" x="28.0" y="28.0">
             <y:LabelModel>
@@ -474,7 +474,7 @@ WebService<y:LabelModel>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="60.0" width="60.0" x="2440.86820619068" y="1082.8889030838302"/>
-          <y:Fill color="#FF6600" transparent="false"/>
+          <y:Fill color="#3333FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" modelName="custom" textColor="#000000" visible="true" width="4.0" x="28.0" y="28.0">
             <y:LabelModel>
