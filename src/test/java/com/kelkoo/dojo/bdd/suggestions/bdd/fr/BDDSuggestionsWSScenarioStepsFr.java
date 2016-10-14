@@ -47,11 +47,11 @@ public class BDDSuggestionsWSScenarioStepsFr {
 	
 	private EmbeddedSuggestionsWSServer server = new EmbeddedSuggestionsWSServer();
 	private Client client ;
-	
+   	
 	private User user;
-
 	private ClientResponse wsSuggestionsResponse;
-
+    private List<Book> searchResult ;
+	
 	private UsersWSClient usersWSClientMock;
 	private SearchWSClient searchWSClientMock;
 	private CategoriesWSClient categoriesWSClientMock;
@@ -102,15 +102,36 @@ public class BDDSuggestionsWSScenarioStepsFr {
 	
 	@Given("^l utilisateur \"([^\"]*)\"$")
 	public void given_the_user(String userId) throws Throwable {
-		user.setUserId(userId);
-		given_the_user_from_user_ws( this.user.getUserId(), new UserStep(user).fields   );
+		given_the_user_from_user_ws( userId   );
 	}
+
+	@Given("^les catégories populaires pour cet age sont$")
+	public void given_the_popular_categories_for_this_age_are(List<Category> popularCategoriesGivenAgeUser)	throws Throwable {
+		Boolean isPopular = true ;
+		given_the_categories_from_categories_ws(isPopular, user.getAge(), popularCategoriesGivenAgeUser);
+	}
+	
+	@Given("^\"([^\"]*)\" livres  sont disponibles pour les catégories populaires pour cet age$")
+	public void given_available_books_for_the_popular_categories_of_the_user_age(int nbBooks) throws Throwable {
+		given_the_popular_categories_for_this_age_are(asList( new Category("cat1","category1"), new Category("cat2","category2")  ));
+		given_the_search_results_for_categories_are("cat1,cat2", 
+				                                    asList( new Book("b11","book11","cat1" ),
+				                                    		new Book("b21","book21","cat2" ),
+				                                    		new Book("b31","book31","cat3" )));
+	}
+
+	
+
+	
 
 	@Given("^il a \"([^\"]*)\" ans$")
 	public void given_he_is_years_old(Integer age) throws Throwable {
 		user.setAge(age);
 		given_the_user_from_user_ws( user.getUserId(), new UserStep(user).fields   );
 	}
+
+
+	
 	
 	@Given("^il est inconnu$")
 	public void given_he_is_unknown() throws Throwable {
@@ -122,12 +143,7 @@ public class BDDSuggestionsWSScenarioStepsFr {
 		given_the_user_from_user_ws_http_status(user.getUserId(), HTTP_500_INTERNAL_SERVER_ERROR);
 	}
 	
-	@Given("^les catégories populaires pour cet age sont$")
-	public void given_the_popular_categories_for_this_age_are(List<Category> popularCategoriesGivenAgeUser)
-			throws Throwable {
-		Boolean isPopular = true ;
-		given_the_categories_from_categories_ws(isPopular, user.getAge(), popularCategoriesGivenAgeUser);
-	}
+
 
 	@Given("^les livres disponibles pour les catégories \"([^\"]*)\" sont$")
 	public void given_the_search_results_for_categories_are(String categoryIds, List<Book> searchResult) throws Throwable {
@@ -144,11 +160,8 @@ public class BDDSuggestionsWSScenarioStepsFr {
 	public void when_we_ask_for_suggestions(Integer maxResults) throws Throwable {
 		when_we_call_suggestions_ws( String.format(SUGGESTIONS_WS_URL_TEMPLATE, user.getUserId(), maxResults.toString()) ) ;
 	}
-	
-	@When("^on appelle ([^\"]*)$")
-	public void when_we_call_suggestions_ws(String suggestionsUrl) throws Throwable {
-		wsSuggestionsResponse = client.resource(suggestionsUrl).accept("application/xml").get(ClientResponse.class);
-	}
+//	
+
 	
 	@Then("^il n y a pas de suggestions$")
 	public void then_there_is_no_suggestions() throws Throwable {
@@ -182,6 +195,13 @@ public class BDDSuggestionsWSScenarioStepsFr {
 		when(usersWSClientMock.retrieveUser(user.getUserId())).thenReturn(user);
 	}
 
+	public void given_the_user_from_user_ws(String userId) throws Throwable {
+		user.setUserId(userId);
+		when(usersWSClientMock.retrieveUser(user.getUserId())).thenReturn(user);
+	}
+
+	
+	
 	@Given("^l utilisateur depuis le web service http://my.library.com/user/([^\"]*) retourne un code http \"([^\"]*)\"$")
 	public void given_the_user_from_user_ws_http_status(String userId, Integer httpStatus) throws Throwable {
 		if ( httpStatus == HTTP_404_NOT_FOUND ){
@@ -199,6 +219,7 @@ public class BDDSuggestionsWSScenarioStepsFr {
 
 	@Given("^les livres depuis le web service http://my.library.com/search\\?categories=([^\"]*)&available=([^\"]*)$")
 	public void given_the_books_from_search_ws(String categoryIds, Boolean available, List<Book> searchResult) throws Throwable {
+		this.searchResult = searchResult;
 		when(searchWSClientMock.searchBooks(available, categoryIds.split(","))).thenReturn(searchResult);
 	}	
 	
@@ -208,10 +229,18 @@ public class BDDSuggestionsWSScenarioStepsFr {
 		when(usersWSClientMock.retrieveUser(userId)).thenReturn(user);
 	}
 	
+	@When("^on appelle ([^\"]*)$")
+	public void when_we_call_suggestions_ws(String suggestionsUrl) throws Throwable {
+		wsSuggestionsResponse = client.resource(suggestionsUrl).accept("application/xml").get(ClientResponse.class);
+	}	
+	
+	
 	@Then("^le code http retourné est  \"([^\"]*)\"$")
 	public void the_http_code_is(Integer httpCode) throws Throwable {
 		assertThat(wsSuggestionsResponse.getStatus(), is(httpCode));
 	}
+
+
 	
 	
 	private void checkSameSuggestions(Suggestions actualSuggestions, List<Suggestion> expectedSuggestions) {

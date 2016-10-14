@@ -51,6 +51,33 @@ public class SuggestionsResource {
 		this.categoriesWSClient = categoriesWSClient;
 	}
 
+//	
+//	@GET
+//	@Produces("application/xml")
+//	public Suggestions getSuggestions(@QueryParam("userId") String userId, @QueryParam("maxResults") Integer maxResults) {
+//			return new Suggestions();
+//	}	
+
+	
+//	
+//	@GET
+//	@Produces("application/xml")
+//	public Suggestions getSuggestions(@QueryParam("userId") String userId, @QueryParam("maxResults") Integer maxResults) {
+//
+//			Suggestions suggestions = new Suggestions();
+//			maxResults = maxResults == null ? DEFAULT_MAX_RESULT : maxResults;
+//	
+//			User user = userWSClient.retrieveUser(userId);
+//			Boolean isPopular = true;
+//			List<Category> popularCategories = categoriesWSClient.retrieveCategories(isPopular, user.getAge());
+//			Boolean bookAvailable = true;
+//			List<Book> books = searchWSClient.searchBooks(bookAvailable, extractCategoryIds(popularCategories));
+//	
+//			suggestions.addSuggestionsAsBooks(books);
+//			return suggestions;
+//	}	
+	
+
 	@GET
 	@Produces("application/xml")
 	public Suggestions getSuggestions(@QueryParam("userId") String userId, @QueryParam("maxResults") Integer maxResults) {
@@ -111,7 +138,7 @@ public class SuggestionsResource {
 			throw notFoundException;
 		}catch(WebApplicationException e){
 			throw new WebApplicationException(Response.Status.SERVICE_UNAVAILABLE) ;
-		}
+		} 
 	}
 
 	public String[] extractCategoryIds(List<Category> categories) {

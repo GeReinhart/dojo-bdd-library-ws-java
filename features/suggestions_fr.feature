@@ -27,6 +27,19 @@ Feature: Fournir des suggestions de livres
       | b21    | Comptines de la ferme | cat2       |
       | b31    | Histoires de la mer   | cat3       |
 
+ 
+
+
+
+  @level_1_specification @nominal_case @future
+  Scenario: limiter le nombre de suggestions
+    Given l utilisateur "Tim"
+    And il a "4" ans
+    And "3" livres  sont disponibles pour les catégories populaires pour cet age
+    When on demande "2" suggestions
+    Then "2" suggestions sont proposées parmi les livres précédents
+
+
   @level_1_specification @nominal_case @valid
   Scenario: limiter le nombre de suggestions
     Given l utilisateur "Tim"
@@ -149,10 +162,7 @@ Feature: Fournir des suggestions de livres
       | b11    | Colorier les poules | cat1       |
     When on appelle http://localhost:9998/suggestions?userId=Tim&maxResults=3
     Then le code http retourné est  "200"
-    Then les suggestions sont
-      | bookId | bookTitle             | categoryId |
-      | b21    | Comptines de la ferme | cat2       |
-      | b31    | Histoires de la mer   | cat3       |
+    
 
   @level_2_technical_details @limit_case @valid
   Scenario: pas de suggestion pour les utilisateurs inconnus
