@@ -105,6 +105,12 @@ public class BDDSuggestionsWSScenarioStepsFr {
 		given_the_user_from_user_ws( userId   );
 	}
 
+	@Given("^il a \"([^\"]*)\" ans$")
+	public void given_he_is_years_old(Integer age) throws Throwable {
+		user.setAge(age);
+		given_the_user_from_user_ws( user.getUserId(), new UserStep(user).fields   );
+	}
+	
 	@Given("^les catégories populaires pour cet age sont$")
 	public void given_the_popular_categories_for_this_age_are(List<Category> popularCategoriesGivenAgeUser)	throws Throwable {
 		Boolean isPopular = true ;
@@ -113,26 +119,26 @@ public class BDDSuggestionsWSScenarioStepsFr {
 	
 	@Given("^\"([^\"]*)\" livres  sont disponibles pour les catégories populaires pour cet age$")
 	public void given_available_books_for_the_popular_categories_of_the_user_age(int nbBooks) throws Throwable {
-		given_the_popular_categories_for_this_age_are(asList( new Category("cat1","category1"), new Category("cat2","category2")  ));
-		given_the_search_results_for_categories_are("cat1,cat2", 
-				                                    asList( new Book("b11","book11","cat1" ),
-				                                    		new Book("b21","book21","cat2" ),
-				                                    		new Book("b31","book31","cat3" )));
+		given_the_popular_categories_for_this_age_are(asList( new Category("cat1","category1") ));
+		List<Book> books = new ArrayList<Book>();
+		for (int i = 0; i < nbBooks; i++) {
+			books.add( new Book("b1"+i,"book1"+i,"cat1" ) ) ;
+		}
+		given_the_search_results_for_categories_are("cat1", books );
 	}
 
-	
-
-	
-
-	@Given("^il a \"([^\"]*)\" ans$")
-	public void given_he_is_years_old(Integer age) throws Throwable {
-		user.setAge(age);
-		given_the_user_from_user_ws( user.getUserId(), new UserStep(user).fields   );
+	/*@Then("^\"([^\"]*)\" suggestions sont proposées parmi les livres précédents$")
+	public void then_suggestions_sont_proposées_parmi_les_livres_précédents(int nbSuggestions) throws Throwable {
+       then_the_suggestions_are(searchResult.subList(0, nbSuggestions));
 	}
 
 
 	
-	
+	private void then_the_suggestions_are(List<Book> subList) {
+		// TODO Auto-generated method stub
+		
+	}*/
+
 	@Given("^il est inconnu$")
 	public void given_he_is_unknown() throws Throwable {
 		given_the_user_from_user_ws_http_status(user.getUserId(), HTTP_404_NOT_FOUND);
