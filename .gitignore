@@ -5,3 +5,4 @@ target/
 /deploy_local_with_geppetto.sh~
 **/*~
 **/.~lock.*
+.idea
