@@ -1,4 +1,4 @@
-package com.kelkoo.dojo.bdd.suggestions.bdd;
+package com.kelkoo.dojo.bdd.suggestions.bdd.en;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.equalTo;
@@ -36,7 +36,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-public class BDDSuggestionsWSScenarioSteps {
+public class BDDSuggestionsWSScenarioStepsEn {
 
 	private static final int HTTP_200_OK = 200;
 	private static final int HTTP_404_NOT_FOUND = 404;
