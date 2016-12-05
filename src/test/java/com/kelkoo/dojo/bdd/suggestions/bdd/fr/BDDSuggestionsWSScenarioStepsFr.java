@@ -32,9 +32,9 @@ import com.sun.jersey.api.client.ClientResponse;
 
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
+import cucumber.api.java.fr.Etantdonné;
+import cucumber.api.java.fr.Quand;
+import cucumber.api.java.fr.Alors;
 
 public class BDDSuggestionsWSScenarioStepsFr {
 
@@ -75,141 +75,130 @@ public class BDDSuggestionsWSScenarioStepsFr {
 	
 	// Level 0: High Level
 	
-	@Given("^un utilisateur$")
-	public void given_a_user() throws Throwable {
-		given_the_user("userId1");
-		given_he_is_years_old(4);
-		given_the_popular_categories_for_this_age_are(asList( new Category("cat1","category1"), new Category("cat2","category2")  ));
-		given_the_search_results_for_categories_are("cat1,cat2", 
+	@Etantdonné("^un utilisateur$")
+	public void etant_donne_un_utilisateur() throws Throwable {
+		etant_donne_l_utilisateur("userId1");
+		etant_donne_l_utilisateur_de_X_ans(4);
+		etant_donne_les_categories_populaires_pour_cet_age(asList( new Category("cat1","category1"), new Category("cat2","category2")  ));
+		etant_donnee_les_livres_disponibles_pour_les_catégories("cat1,cat2", 
 				                                    asList( new Book("b11","book11","cat1" ),
 				                                    		new Book("b21","book21","cat2" ),
 				                                    		new Book("b31","book31","cat3" )));
 	}
 
-	@When("^on demande suggestions$")
-	public void when_we_ask_for_suggestions() throws Throwable {
-	    when_we_ask_for_suggestions(3);
+	@Quand("^on demande suggestions$")
+	public void quand_on_demande_des_suggestions() throws Throwable {
+	    quand_on_demande_X_suggestions(3);
 	}
 
-	@Then("^les suggestions proposées sont populaires, disponibles et adaptées à l age de l utilisateur$")
-	public void then_the_suggestions_are_popular_and_available_books_adpated_to_the_age_of_the_user() throws Throwable {
-	    then_the_suggestions_are(asList( new Suggestion("b11","book11","cat1" ),
+	@Alors("^les suggestions proposées sont populaires, disponibles et adaptées à l age de l utilisateur$")
+	public void alors_les_suggestions_proposees_sont_populaires_disponibles_et_adaptees_a_l_age_de_l_utilisateur() throws Throwable {
+	    alors_les_suggestions_sont(asList( new Suggestion("b11","book11","cat1" ),
 				                         new Suggestion("b21","book21","cat2" ),
 				                         new Suggestion("b31","book31","cat3" )));
 	}
 		
 	// Level 1: Specifications
 	
-	@Given("^l utilisateur \"([^\"]*)\"$")
-	public void given_the_user(String userId) throws Throwable {
-		given_the_user_from_user_ws( userId   );
+	@Etantdonné("^l utilisateur \"([^\"]*)\"$")
+	public void etant_donne_l_utilisateur(String userId) throws Throwable {
+		etant_donne_l_utilisateur_suivant_depuis_le_web_service_utilisateur( userId   );
 	}
 
-	@Given("^il a \"([^\"]*)\" ans$")
-	public void given_he_is_years_old(Integer age) throws Throwable {
+	@Etantdonné("^il a \"([^\"]*)\" ans$")
+	public void etant_donne_l_utilisateur_de_X_ans(Integer age) throws Throwable {
 		user.setAge(age);
-		given_the_user_from_user_ws( user.getUserId(), new UserStep(user).fields   );
+		etant_donne_l_utilisateur_suivant_depuis_le_web_service_utilisateur( user.getUserId(), new UserStep(user).fields   );
 	}
 	
-	@Given("^les catégories populaires pour cet age sont$")
-	public void given_the_popular_categories_for_this_age_are(List<Category> popularCategoriesGivenAgeUser)	throws Throwable {
+	@Etantdonné("^les catégories populaires pour cet age sont$")
+	public void etant_donne_les_categories_populaires_pour_cet_age(List<Category> popularCategoriesGivenAgeUser)	throws Throwable {
 		Boolean isPopular = true ;
-		given_the_categories_from_categories_ws(isPopular, user.getAge(), popularCategoriesGivenAgeUser);
+		etant_donnee_les_categories_suivante_depuis_le_web_service_categories(isPopular, user.getAge(), popularCategoriesGivenAgeUser);
 	}
 	
-	@Given("^\"([^\"]*)\" livres  sont disponibles pour les catégories populaires pour cet age$")
-	public void given_available_books_for_the_popular_categories_of_the_user_age(int nbBooks) throws Throwable {
-		given_the_popular_categories_for_this_age_are(asList( new Category("cat1","category1") ));
+	@Etantdonné("^\"([^\"]*)\" livres  sont disponibles pour les catégories populaires pour cet age$")
+	public void etant_donnee_X_livres_sont_disponibles_pour_les_categories_populaires_pour_cet_age(int nbBooks) throws Throwable {
+		etant_donne_les_categories_populaires_pour_cet_age(asList( new Category("cat1","category1") ));
 		List<Book> books = new ArrayList<Book>();
 		for (int i = 0; i < nbBooks; i++) {
 			books.add( new Book("b1"+i,"book1"+i,"cat1" ) ) ;
 		}
-		given_the_search_results_for_categories_are("cat1", books );
+		etant_donnee_les_livres_disponibles_pour_les_catégories("cat1", books );
 	}
 
-	/*@Then("^\"([^\"]*)\" suggestions sont proposées parmi les livres précédents$")
-	public void then_suggestions_sont_proposées_parmi_les_livres_précédents(int nbSuggestions) throws Throwable {
-       then_the_suggestions_are(searchResult.subList(0, nbSuggestions));
-	}
-
-
-	
-	private void then_the_suggestions_are(List<Book> subList) {
-		// TODO Auto-generated method stub
-		
-	}*/
-
-	@Given("^il est inconnu$")
-	public void given_he_is_unknown() throws Throwable {
-		given_the_user_from_user_ws_http_status(user.getUserId(), HTTP_404_NOT_FOUND);
+	@Etantdonné("^il est inconnu$")
+	public void etant_donnee_il_est_inconnu() throws Throwable {
+		etant_donnee_le_status_retourne_par_le_web_service_utilisateur(user.getUserId(), HTTP_404_NOT_FOUND);
 	}
 	
-	@Given("^impossible de récupérer les informations de l utilisateur$")
-	public void impossible_to_get_information_on_the_user() throws Throwable {
-		given_the_user_from_user_ws_http_status(user.getUserId(), HTTP_500_INTERNAL_SERVER_ERROR);
+	@Etantdonné("^impossible de récupérer les informations de l utilisateur$")
+	public void etant_donnee_impossible_de_recuperer_les_informations_de_l_utilisateur() throws Throwable {
+		etant_donnee_le_status_retourne_par_le_web_service_utilisateur(user.getUserId(), HTTP_500_INTERNAL_SERVER_ERROR);
 	}
-	
 
 
-	@Given("^les livres disponibles pour les catégories \"([^\"]*)\" sont$")
-	public void given_the_search_results_for_categories_are(String categoryIds, List<Book> searchResult) throws Throwable {
+	@Etantdonné("^les livres disponibles pour les catégories \"([^\"]*)\" sont$")
+	public void etant_donnee_les_livres_disponibles_pour_les_catégories(String categoryIds, List<Book> searchResult) throws Throwable {
 		Boolean available = true ;
-		given_the_books_from_search_ws(categoryIds,available, searchResult);
+		etant_donnee_les_livres_suivants_depuis_le_web_service_recherche(categoryIds,available, searchResult);
 	}
 
-	@Given("^l utilisateur a déja reservé les livres suivants$")
-	public void given_the_user_has_already_booked_the_following_books(List<Book> alreadyBookedBooks) throws Throwable {
-		given_the_books_from_user_ws(user.getUserId(),alreadyBookedBooks);
+	@Etantdonné("^l utilisateur a déja reservé les livres suivants$")
+	public void etant_donnee_l_utilisateur_a_deja_reserve_les_livres_suivants(List<Book> alreadyBookedBooks) throws Throwable {
+		etant_donnee_les_livres_suivants_depuis_le_web_service_recherche(user.getUserId(),alreadyBookedBooks);
 	}
 
-	@When("^on demande \"([^\"]*)\" suggestions$")
-	public void when_we_ask_for_suggestions(Integer maxResults) throws Throwable {
-		when_we_call_suggestions_ws( String.format(SUGGESTIONS_WS_URL_TEMPLATE, user.getUserId(), maxResults.toString()) ) ;
-	}
-//	
-
-	
-	@Then("^il n y a pas de suggestions$")
-	public void then_there_is_no_suggestions() throws Throwable {
-		then_the_suggestions_are(new ArrayList<Suggestion>());
+	@Quand("^on demande \"([^\"]*)\" suggestions$")
+	public void quand_on_demande_X_suggestions(Integer maxResults) throws Throwable {
+		quand_on_appelle_l_url( String.format(SUGGESTIONS_WS_URL_TEMPLATE, user.getUserId(), maxResults.toString()) ) ;
 	}
 	
-	@Then("^les suggestions sont$")
-	public void then_the_suggestions_are(List<Suggestion> expectedSuggestions) throws Throwable {
+	@Alors("^il n y a pas de suggestions$")
+	public void alors_il_n_y_a_pas_de_suggestions() throws Throwable {
+		alors_les_suggestions_sont(new ArrayList<Suggestion>());
+	}
+	
+	@Alors("^\"([^\"]*)\" suggestions sont proposées parmi les livres précédents$")
+	public void alors_X_suggestions_sont_proposees_parmi_les_livres_precedents(Integer nbSuggestions) throws Throwable {
+	    Suggestions suggestions = Suggestions.suggestionsFromBooks(  searchResult.subList(0, nbSuggestions) ) ;
+	    alors_les_suggestions_sont(suggestions.getSuggestions()) ;
+	}
+	
+	@Alors("^les suggestions sont$")
+	public void alors_les_suggestions_sont(List<Suggestion> expectedSuggestions) throws Throwable {
 		if (expectedSuggestions.isEmpty()){
-			the_http_code_is(HTTP_404_NOT_FOUND);	
+			alors_le_code_http_retourne_est(HTTP_404_NOT_FOUND);	
 		}else{
-			the_http_code_is(HTTP_200_OK);
+			alors_le_code_http_retourne_est(HTTP_200_OK);
 			SuggestionsMarshaller suggestionsMarshaller = new SuggestionsMarshaller();
 		    Suggestions actualSuggestions = suggestionsMarshaller.deserialize(wsSuggestionsResponse.getEntity(String.class));
 		    checkSameSuggestions(actualSuggestions, expectedSuggestions);
 		}
 	}
 
-	@Then("^le système est temporairement indisponible$")
-	public void the_system_is_temporary_unavaiable() throws Throwable {
-		the_http_code_is(HTTP_503_SERIVCE_UNAVAILABLE) ;
+	@Alors("^le système est temporairement indisponible$")
+	public void alors_le_systeme_est_temporairement_indisponible() throws Throwable {
+		alors_le_code_http_retourne_est(HTTP_503_SERIVCE_UNAVAILABLE) ;
 	}
 	
 	// Level 2: Technical details
 	
-	@Given("^l utilisateur depuis le web service http://my.library.com/user/([^\"]*)$")
-	public void given_the_user_from_user_ws(String userId, List<FieldValue> values) throws Throwable {
+	@Etantdonné("^l utilisateur depuis le web service http://my.library.com/user/([^\"]*)$")
+	public void etant_donne_l_utilisateur_suivant_depuis_le_web_service_utilisateur(String userId, List<FieldValue> values) throws Throwable {
 		FieldValues fieldsValues = new FieldValues(values);
 		user.setUserId(userId);
 		user.setAge(fieldsValues.getAsInteger("age"));
 		when(usersWSClientMock.retrieveUser(user.getUserId())).thenReturn(user);
 	}
 
-	public void given_the_user_from_user_ws(String userId) throws Throwable {
+	public void etant_donne_l_utilisateur_suivant_depuis_le_web_service_utilisateur(String userId) throws Throwable {
 		user.setUserId(userId);
 		when(usersWSClientMock.retrieveUser(user.getUserId())).thenReturn(user);
 	}
-
 	
-	
-	@Given("^l utilisateur depuis le web service http://my.library.com/user/([^\"]*) retourne un code http \"([^\"]*)\"$")
-	public void given_the_user_from_user_ws_http_status(String userId, Integer httpStatus) throws Throwable {
+	@Etantdonné("^l utilisateur depuis le web service http://my.library.com/user/([^\"]*) retourne un code http \"([^\"]*)\"$")
+	public void etant_donnee_le_status_retourne_par_le_web_service_utilisateur(String userId, Integer httpStatus) throws Throwable {
 		if ( httpStatus == HTTP_404_NOT_FOUND ){
 			when(usersWSClientMock.retrieveUser(userId)).thenThrow(new NotFoundException());
 		}
@@ -218,37 +207,34 @@ public class BDDSuggestionsWSScenarioStepsFr {
 		}
 	}
 	
-	@Given("^les catégories depuis le web service http://my.library.com/category\\?popular=([^\"]*)&age=(\\d+)$")
-	public void given_the_categories_from_categories_ws(Boolean popular , Integer age, List<Category> popularCategoriesGivenAgeUser) throws Throwable {
+	@Etantdonné("^les catégories depuis le web service http://my.library.com/category\\?popular=([^\"]*)&age=(\\d+)$")
+	public void etant_donnee_les_categories_suivante_depuis_le_web_service_categories(Boolean popular , Integer age, List<Category> popularCategoriesGivenAgeUser) throws Throwable {
 		when(categoriesWSClientMock.retrieveCategories( popular, user.getAge())).thenReturn(popularCategoriesGivenAgeUser);
 	}
 
-	@Given("^les livres depuis le web service http://my.library.com/search\\?categories=([^\"]*)&available=([^\"]*)$")
-	public void given_the_books_from_search_ws(String categoryIds, Boolean available, List<Book> searchResult) throws Throwable {
+	@Etantdonné("^les livres depuis le web service http://my.library.com/search\\?categories=([^\"]*)&available=([^\"]*)$")
+	public void etant_donnee_les_livres_suivants_depuis_le_web_service_recherche(String categoryIds, Boolean available, List<Book> searchResult) throws Throwable {
 		this.searchResult = searchResult;
 		when(searchWSClientMock.searchBooks(available, categoryIds.split(","))).thenReturn(searchResult);
 	}	
 	
-	@Given("^les livres depuis le web service http://my.library.com/user/([^\"]*)/books$")
-	public void given_the_books_from_user_ws(String userId,List<Book> alreadyBookedBooks) throws Throwable {
+	@Etantdonné("^les livres depuis le web service http://my.library.com/user/([^\"]*)/books$")
+	public void etant_donnee_les_livres_suivants_depuis_le_web_service_recherche(String userId,List<Book> alreadyBookedBooks) throws Throwable {
 		user.setAlreadyBookedBooks(alreadyBookedBooks);
 		when(usersWSClientMock.retrieveUser(userId)).thenReturn(user);
 	}
 	
-	@When("^on appelle ([^\"]*)$")
-	public void when_we_call_suggestions_ws(String suggestionsUrl) throws Throwable {
+	@Quand("^on appelle ([^\"]*)$")
+	public void quand_on_appelle_l_url(String suggestionsUrl) throws Throwable {
 		wsSuggestionsResponse = client.resource(suggestionsUrl).accept("application/xml").get(ClientResponse.class);
 	}	
 	
 	
-	@Then("^le code http retourné est  \"([^\"]*)\"$")
-	public void the_http_code_is(Integer httpCode) throws Throwable {
+	@Alors("^le code http retourné est  \"([^\"]*)\"$")
+	public void alors_le_code_http_retourne_est(Integer httpCode) throws Throwable {
 		assertThat(wsSuggestionsResponse.getStatus(), is(httpCode));
 	}
 
-
-	
-	
 	private void checkSameSuggestions(Suggestions actualSuggestions, List<Suggestion> expectedSuggestions) {
 		assertThat(actualSuggestions.size(), equalTo(expectedSuggestions.size()));
 

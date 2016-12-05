@@ -33,6 +33,14 @@ public class Suggestions {
 		addSuggestions(suggestions);
 	}
 	
+	public static Suggestions suggestionsFromBooks(List<Book> books) {
+		List<Suggestion> suggestions = new ArrayList<Suggestion>();
+		for (Book book : books) {
+			suggestions.add(new Suggestion(book)) ;
+		}
+		return new Suggestions(suggestions);
+	}
+
 	public boolean isEmpty(){
 		return suggestions.isEmpty();
 	}

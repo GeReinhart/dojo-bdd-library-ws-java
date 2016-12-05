@@ -27,11 +27,8 @@ Feature: Fournir des suggestions de livres
       | b21    | Comptines de la ferme | cat2       |
       | b31    | Histoires de la mer   | cat3       |
 
- 
 
-
-
-  @level_1_specification @nominal_case @future
+  @level_1_specification @nominal_case @valid
   Scenario: limiter le nombre de suggestions
     Given l utilisateur "Tim"
     And il a "4" ans
