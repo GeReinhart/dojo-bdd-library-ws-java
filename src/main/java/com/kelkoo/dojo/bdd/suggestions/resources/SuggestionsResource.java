@@ -33,8 +33,6 @@ import com.sun.jersey.api.NotFoundException;
 @Path("/suggestions")
 public class SuggestionsResource {
 
-	private static final Logger LOGGER = Logger.getLogger(SuggestionsResource.class);
-
 	private static final Integer DEFAULT_MAX_RESULT = 100;
 
 	private UsersWSClient userWSClient;
@@ -51,7 +49,12 @@ public class SuggestionsResource {
 		this.categoriesWSClient = categoriesWSClient;
 	}
 
-//	
+	
+	// STEP 0 
+    	
+	
+	// STEP 1 A : new web service resource
+	
 //	@GET
 //	@Produces("application/xml")
 //	public Suggestions getSuggestions(@QueryParam("userId") String userId, @QueryParam("maxResults") Integer maxResults) {
@@ -59,13 +62,13 @@ public class SuggestionsResource {
 //	}	
 
 	
-//	
+	// STEP 1 B : minimal service implemented
+	
 //	@GET
 //	@Produces("application/xml")
-//	public Suggestions getSuggestions(@QueryParam("userId") String userId, @QueryParam("maxResults") Integer maxResults) {
+//	public Suggestions getSuggestions(@QueryParam("userId") String userId) {
 //
 //			Suggestions suggestions = new Suggestions();
-//			maxResults = maxResults == null ? DEFAULT_MAX_RESULT : maxResults;
 //	
 //			User user = userWSClient.retrieveUser(userId);
 //			Boolean isPopular = true;
@@ -77,69 +80,229 @@ public class SuggestionsResource {
 //			return suggestions;
 //	}	
 	
+	// STEP 3 A : reduce number of results
 
+//	@GET
+//	@Produces("application/xml")
+//	public Suggestions getSuggestions(@QueryParam("userId") String userId, @QueryParam("maxResults") Integer maxResults) {
+//
+//			Suggestions suggestions = new Suggestions();
+//			maxResults = maxResults == null ? DEFAULT_MAX_RESULT : maxResults;
+//			
+//			User user = userWSClient.retrieveUser(userId);
+//			Boolean isPopular = true;
+//			List<Category> popularCategories = categoriesWSClient.retrieveCategories(isPopular, user.getAge());
+//			Boolean bookAvailable = true;
+//			List<Book> booksForSuggestions = searchWSClient.searchBooks(bookAvailable, extractCategoryIds(popularCategories));
+//
+//			// Reduce number of results
+//			if (booksForSuggestions.size() > maxResults) {
+//  			     booksForSuggestions = booksForSuggestions.subList(0, maxResults);
+//		    }
+//			
+//			suggestions.addSuggestionsAsBooks(booksForSuggestions);
+//			return suggestions;
+//	}	
+	
+	// STEP 3 B : Do not return already red books
+
+//	@GET
+//	@Produces("application/xml")
+//	public Suggestions getSuggestions(@QueryParam("userId") String userId, @QueryParam("maxResults") Integer maxResults) {
+//
+//			Suggestions suggestions = new Suggestions();
+//			maxResults = maxResults == null ? DEFAULT_MAX_RESULT : maxResults;
+//			
+//			User user = userWSClient.retrieveUser(userId);
+//			Boolean isPopular = true;
+//			List<Category> popularCategories = categoriesWSClient.retrieveCategories(isPopular, user.getAge());
+//			Boolean bookAvailable = true;
+//			List<Book> books = searchWSClient.searchBooks(bookAvailable, extractCategoryIds(popularCategories));
+//
+//			List<Book> booksForSuggestions = new ArrayList<Book>();
+//	        
+//	        // Do not return already red books
+//			for (Book book : books) {
+//				if (! user.hasAlreadyBooked(book)   ) {
+//					booksForSuggestions.add(book);
+//				}
+//			}
+//			
+//			// Reduce number of results
+//			if (booksForSuggestions.size() > maxResults) {
+//  			     booksForSuggestions = booksForSuggestions.subList(0, maxResults);
+//		    }
+//			
+//			suggestions.addSuggestionsAsBooks(booksForSuggestions);
+//			return suggestions;
+//	}
+	
+	// STEP 3 C : Do not return books from same categories	
+	
+//	@GET
+//	@Produces("application/xml")
+//	public Suggestions getSuggestions(@QueryParam("userId") String userId, @QueryParam("maxResults") Integer maxResults) {
+//
+//			Suggestions suggestions = new Suggestions();
+//			maxResults = maxResults == null ? DEFAULT_MAX_RESULT : maxResults;
+//			
+//			User user = userWSClient.retrieveUser(userId);
+//			Boolean isPopular = true;
+//			List<Category> popularCategories = categoriesWSClient.retrieveCategories(isPopular, user.getAge());
+//			Boolean bookAvailable = true;
+//			List<Book> books = searchWSClient.searchBooks(bookAvailable, extractCategoryIds(popularCategories));
+//
+//			List<Book> booksForSuggestions = new ArrayList<Book>();
+//	        Set<String> categories = new HashSet<String>();
+//	        
+//			for (Book book : books) {
+//				
+//				if (! user.hasAlreadyBooked(book)                          // Do not return already red books 
+//						&& ! categories.contains(book.getCategoryId()) ) { // Do not return books from same categories
+//					booksForSuggestions.add(book);
+//					categories.add(book.getCategoryId());
+//				}
+//			}
+//			
+//			// Reduce number of results
+//			if (booksForSuggestions.size() > maxResults) {
+//  			     booksForSuggestions = booksForSuggestions.subList(0, maxResults);
+//		    }
+//			
+//			suggestions.addSuggestionsAsBooks(booksForSuggestions);
+//			return suggestions;
+//	}
+	
+	
+	// STEP 3 D : If not enough books, return also books from same categories
+	
+//	@GET
+//	@Produces("application/xml")
+//	public Suggestions getSuggestions(@QueryParam("userId") String userId, @QueryParam("maxResults") Integer maxResults) {
+//
+//			Suggestions suggestions = new Suggestions();
+//			maxResults = maxResults == null ? DEFAULT_MAX_RESULT : maxResults;
+//			
+//			User user = userWSClient.retrieveUser(userId);
+//			Boolean isPopular = true;
+//			List<Category> popularCategories = categoriesWSClient.retrieveCategories(isPopular, user.getAge());
+//			Boolean bookAvailable = true;
+//			List<Book> books = searchWSClient.searchBooks(bookAvailable, extractCategoryIds(popularCategories));
+//
+//			List<Book> booksForSuggestions = new ArrayList<Book>();
+//	        Set<String> categories = new HashSet<String>();
+//	        
+//			for (Book book : books) {
+//				
+//				if (! user.hasAlreadyBooked(book)                          // Do not return already red books 
+//						&& ! categories.contains(book.getCategoryId()) ) { // Do not return books from same categories
+//					booksForSuggestions.add(book);
+//					categories.add(book.getCategoryId());
+//				}
+//			}
+//			
+//			// Reduce number of results
+//			if (booksForSuggestions.size() > maxResults) {
+//  			     booksForSuggestions = booksForSuggestions.subList(0, maxResults);
+//		    }
+//			
+//			// If not enough books, return also books from same categories
+//			if (booksForSuggestions.size() < maxResults) {
+//			booksForSuggestions.clear();
+//			Map<String,Deque<Book>> bookByCategories = new HashMap<String, Deque<Book>>();
+//			for (Book book : books) {
+//				if ( !bookByCategories.containsKey(book.getCategoryId()) ){
+//					bookByCategories.put(book.getCategoryId(), new ArrayDeque<Book>()) ;
+//				}
+//				bookByCategories.get(book.getCategoryId()).add(book);
+//			}
+//			boolean hasABook = true ;
+//			while( booksForSuggestions.size() < maxResults &&  booksForSuggestions.size() < books.size() && hasABook ){
+//				hasABook = false ;
+//				for (String category : bookByCategories.keySet()  ){
+//					Book book =  bookByCategories.get(category).pollFirst() ;
+//					hasABook = book != null || hasABook ; 
+//					if ( book != null &&  ! user.hasAlreadyBooked(book) ) {
+//						booksForSuggestions.add(book);
+//					}
+//				}
+//			    }
+//		    }			
+//			
+//			suggestions.addSuggestionsAsBooks(booksForSuggestions);
+//			return suggestions;
+//	}
+		
+	
+	// STEP 4 : Http status  SERVICE_UNAVAILABLE
+	
 	@GET
 	@Produces("application/xml")
 	public Suggestions getSuggestions(@QueryParam("userId") String userId, @QueryParam("maxResults") Integer maxResults) {
 
-		try{
-			
+		try {
+
 			Suggestions suggestions = new Suggestions();
 			maxResults = maxResults == null ? DEFAULT_MAX_RESULT : maxResults;
-	
-			LOGGER.debug("getSuggestions for user " + userId);
-	
+
 			User user = userWSClient.retrieveUser(userId);
 			Boolean isPopular = true;
 			List<Category> popularCategories = categoriesWSClient.retrieveCategories(isPopular, user.getAge());
 			Boolean bookAvailable = true;
 			List<Book> books = searchWSClient.searchBooks(bookAvailable, extractCategoryIds(popularCategories));
+
 			List<Book> booksForSuggestions = new ArrayList<Book>();
-	        Set<String> categories = new HashSet<String>();
-	        
+			Set<String> categories = new HashSet<String>();
+
 			for (Book book : books) {
-				if (! user.hasAlreadyBooked(book)  && ! categories.contains(book.getCategoryId()) ) {
+
+				if (!user.hasAlreadyBooked(book) // Do not return already red  books
+						&& !categories.contains(book.getCategoryId())) { // Do not return books from same categories
 					booksForSuggestions.add(book);
 					categories.add(book.getCategoryId());
 				}
 			}
-	
+
+			// Reduce number of results
 			if (booksForSuggestions.size() > maxResults) {
 				booksForSuggestions = booksForSuggestions.subList(0, maxResults);
 			}
-			
+
+			// If not enough books, return also books from same categories
 			if (booksForSuggestions.size() < maxResults) {
 				booksForSuggestions.clear();
-				Map<String,Deque<Book>> bookByCategories = new HashMap<String, Deque<Book>>();
+				Map<String, Deque<Book>> bookByCategories = new HashMap<String, Deque<Book>>();
 				for (Book book : books) {
-					if ( !bookByCategories.containsKey(book.getCategoryId()) ){
-						bookByCategories.put(book.getCategoryId(), new ArrayDeque<Book>()) ;
+					if (!bookByCategories.containsKey(book.getCategoryId())) {
+						bookByCategories.put(book.getCategoryId(), new ArrayDeque<Book>());
 					}
 					bookByCategories.get(book.getCategoryId()).add(book);
 				}
-				boolean hasABook = true ;
-				while( booksForSuggestions.size() < maxResults &&  booksForSuggestions.size() < books.size() && hasABook ){
-					hasABook = false ;
-					for (String category : bookByCategories.keySet()  ){
-						Book book =  bookByCategories.get(category).pollFirst() ;
-						hasABook = book != null || hasABook ; 
-						if ( book != null &&  ! user.hasAlreadyBooked(book) ) {
+				boolean hasABook = true;
+				while (booksForSuggestions.size() < maxResults && booksForSuggestions.size() < books.size() && hasABook) {
+					hasABook = false;
+					for (String category : bookByCategories.keySet()) {
+						Book book = bookByCategories.get(category).pollFirst();
+						hasABook = book != null || hasABook;
+						if (book != null && !user.hasAlreadyBooked(book)) {
 							booksForSuggestions.add(book);
 						}
 					}
 				}
 			}
-	
+
 			suggestions.addSuggestionsAsBooks(booksForSuggestions);
-			LOGGER.debug("Return " + suggestions);
 			return suggestions;
-			
-		}catch(NotFoundException notFoundException){
+
+		} catch (NotFoundException notFoundException) {
 			throw notFoundException;
-		}catch(WebApplicationException e){
-			throw new WebApplicationException(Response.Status.SERVICE_UNAVAILABLE) ;
-		} 
+		} catch (WebApplicationException e) {
+			throw new WebApplicationException(Response.Status.SERVICE_UNAVAILABLE);
+		}
 	}
+	
+	
+	
 
 	public String[] extractCategoryIds(List<Category> categories) {
 		String[] categoryIds = new String[categories.size()];

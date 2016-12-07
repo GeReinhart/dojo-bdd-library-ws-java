@@ -18,12 +18,18 @@ Feature: Fournir des suggestions de livres
       | b11    | Colorier les poules   | cat1       |
       | b21    | Comptines de la ferme | cat2       |
       | b31    | Histoires de la mer   | cat3       |
-    And les livres depuis le web service http://my.library.com/user/Tim/books
-      | bookId | bookTitle           | categoryId |
-      | b11    | Colorier les poules | cat1       |
     When on appelle http://localhost:9998/suggestions?userId=Tim&maxResults=3
     Then le code http retourné est  "200"
-
+    And les données retournées sont
+    """
+     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+     <suggestions>
+         <suggestions bookId="b11" bookTitle="Colorier les poules" categoryId="cat1"/>
+         <suggestions bookId="b21" bookTitle="Comptines de la ferme" categoryId="cat2"/>
+         <suggestions bookId="b31" bookTitle="Histoires de la mer" categoryId="cat3"/>
+     </suggestions>
+    """
+      
   # Etape 2 : Implémenter le cas minimal de niveau 1 correspondant  réutilisation de phrase exécutable de niveau d'abstraction inférieur  
 
   @level_1_specification @nominal_case @valid
