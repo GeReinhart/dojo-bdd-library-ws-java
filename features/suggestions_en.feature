@@ -1,7 +1,7 @@
 Feature: Providing book suggestions
 
 
-  # Etape 1 : Implémenter le cas minimal de niveau 2  
+  # Step 1 : Implements the minimal case level 2  
   
     @level_2_technical_details @nominal_case @valid
   Scenario: suggestions of popular and available books adpated to the age of the user, he have never booked the suggestions
@@ -29,7 +29,7 @@ Feature: Providing book suggestions
       | b21    | Comptines de la ferme | cat2       |
       | b31    | Histoires de la mer   | cat3       |
       
-  # Etape 2 : Implémenter le cas minimal de niveau 1 correspondant  réutilisation de phrase exécutable de niveau d'abstraction inférieur  
+  # Step 2 : Implements the related level 1 : reuse steps from a lower level  
       
     @level_1_specification @nominal_case @valid
   Scenario: suggestions of popular and available books adpated to the age of the user
@@ -52,7 +52,7 @@ Feature: Providing book suggestions
       | b21    | Comptines de la ferme | cat2       |
       | b31    | Histoires de la mer   | cat3       |
   
-  # Etape 3 : Implémenter les autres cas nominaux de niveau 1  => réutilisation de phrase exécutable de mếme niveau d abstraction  
+  # Step 3 : Implements other nominal level 1 cases  => reuse steps from a same level    
 
   @level_1_specification @nominal_case @valid
   Scenario: limit the number of suggestions
@@ -74,9 +74,9 @@ Feature: Providing book suggestions
       | b11    | Colorier les poules   | cat1       |
       | b21    | Comptines de la ferme | cat2       |
       
-      # Plus de lisibilité du scénario en générer des données dans les steps 
+      # To be more readable, generate data at step level  
       
-      ## TODO add scenario
+      # TODO
       
 
   @level_1_specification @nominal_case @valid
@@ -146,7 +146,7 @@ Feature: Providing book suggestions
       | b21    | Comptines de la ferme | cat2       |
       | b22    | Comptines du loup     | cat2       |
       
-  # Etape 4 : Implémenter les autres cas de niveau 2 pour avoir toutes les phrases exécutables de base      
+  # Step 4 : Implements other level 2 cases       
      
   @level_2_technical_details @limit_case @valid
   Scenario: unknown user, no suggestion
@@ -160,7 +160,7 @@ Feature: Providing book suggestions
     When we call http://localhost:9998/suggestions?userId=Lise&maxResults=3
     Then the http code is "503"     
       
-  # Etape 5 : Implémenter les autres cas de niveau 1  
+  # Step 5 : Implements other level 1 cases 
 
   @level_1_specification @limit_case @valid
   Scenario: unknown user, no suggestion
@@ -176,7 +176,7 @@ Feature: Providing book suggestions
     When we ask for "3" suggestions
     Then the system is temporary unavaiable
 
-  # Etape 6 : Implémenter le niveau 0 en générant des données dans les steps 
+  # Step 6 : Implements level 0 case  
   
   @level_0_high_level @nominal_case @valid
   Scenario: providing book suggestions
