@@ -236,70 +236,70 @@ public class SuggestionsResource {
 	
 	// STEP 4 : Http status  SERVICE_UNAVAILABLE
 	
-	@GET
-	@Produces("application/xml")
-	public Suggestions getSuggestions(@QueryParam("userId") String userId, @QueryParam("maxResults") Integer maxResults) {
-
-		try {
-
-			Suggestions suggestions = new Suggestions();
-			maxResults = maxResults == null ? DEFAULT_MAX_RESULT : maxResults;
-
-			User user = userWSClient.retrieveUser(userId);
-			Boolean isPopular = true;
-			List<Category> popularCategories = categoriesWSClient.retrieveCategories(isPopular, user.getAge());
-			Boolean bookAvailable = true;
-			List<Book> books = searchWSClient.searchBooks(bookAvailable, extractCategoryIds(popularCategories));
-
-			List<Book> booksForSuggestions = new ArrayList<Book>();
-			Set<String> categories = new HashSet<String>();
-
-			for (Book book : books) {
-
-				if (!user.hasAlreadyBooked(book) // Do not return already red  books
-						&& !categories.contains(book.getCategoryId())) { // Do not return books from same categories
-					booksForSuggestions.add(book);
-					categories.add(book.getCategoryId());
-				}
-			}
-
-			// Reduce number of results
-			if (booksForSuggestions.size() > maxResults) {
-				booksForSuggestions = booksForSuggestions.subList(0, maxResults);
-			}
-
-			// If not enough books, return also books from same categories
-			if (booksForSuggestions.size() < maxResults) {
-				booksForSuggestions.clear();
-				Map<String, Deque<Book>> bookByCategories = new HashMap<String, Deque<Book>>();
-				for (Book book : books) {
-					if (!bookByCategories.containsKey(book.getCategoryId())) {
-						bookByCategories.put(book.getCategoryId(), new ArrayDeque<Book>());
-					}
-					bookByCategories.get(book.getCategoryId()).add(book);
-				}
-				boolean hasABook = true;
-				while (booksForSuggestions.size() < maxResults && booksForSuggestions.size() < books.size() && hasABook) {
-					hasABook = false;
-					for (String category : bookByCategories.keySet()) {
-						Book book = bookByCategories.get(category).pollFirst();
-						hasABook = book != null || hasABook;
-						if (book != null && !user.hasAlreadyBooked(book)) {
-							booksForSuggestions.add(book);
-						}
-					}
-				}
-			}
-
-			suggestions.addSuggestionsAsBooks(booksForSuggestions);
-			return suggestions;
-
-		} catch (NotFoundException notFoundException) {
-			throw notFoundException;
-		} catch (WebApplicationException e) {
-			throw new WebApplicationException(Response.Status.SERVICE_UNAVAILABLE);
-		}
-	}
+//	@GET
+//	@Produces("application/xml")
+//	public Suggestions getSuggestions(@QueryParam("userId") String userId, @QueryParam("maxResults") Integer maxResults) {
+//
+//		try {
+//
+//			Suggestions suggestions = new Suggestions();
+//			maxResults = maxResults == null ? DEFAULT_MAX_RESULT : maxResults;
+//
+//			User user = userWSClient.retrieveUser(userId);
+//			Boolean isPopular = true;
+//			List<Category> popularCategories = categoriesWSClient.retrieveCategories(isPopular, user.getAge());
+//			Boolean bookAvailable = true;
+//			List<Book> books = searchWSClient.searchBooks(bookAvailable, extractCategoryIds(popularCategories));
+//
+//			List<Book> booksForSuggestions = new ArrayList<Book>();
+//			Set<String> categories = new HashSet<String>();
+//
+//			for (Book book : books) {
+//
+//				if (!user.hasAlreadyBooked(book) // Do not return already red  books
+//						&& !categories.contains(book.getCategoryId())) { // Do not return books from same categories
+//					booksForSuggestions.add(book);
+//					categories.add(book.getCategoryId());
+//				}
+//			}
+//
+//			// Reduce number of results
+//			if (booksForSuggestions.size() > maxResults) {
+//				booksForSuggestions = booksForSuggestions.subList(0, maxResults);
+//			}
+//
+//			// If not enough books, return also books from same categories
+//			if (booksForSuggestions.size() < maxResults) {
+//				booksForSuggestions.clear();
+//				Map<String, Deque<Book>> bookByCategories = new HashMap<String, Deque<Book>>();
+//				for (Book book : books) {
+//					if (!bookByCategories.containsKey(book.getCategoryId())) {
+//						bookByCategories.put(book.getCategoryId(), new ArrayDeque<Book>());
+//					}
+//					bookByCategories.get(book.getCategoryId()).add(book);
+//				}
+//				boolean hasABook = true;
+//				while (booksForSuggestions.size() < maxResults && booksForSuggestions.size() < books.size() && hasABook) {
+//					hasABook = false;
+//					for (String category : bookByCategories.keySet()) {
+//						Book book = bookByCategories.get(category).pollFirst();
+//						hasABook = book != null || hasABook;
+//						if (book != null && !user.hasAlreadyBooked(book)) {
+//							booksForSuggestions.add(book);
+//						}
+//					}
+//				}
+//			}
+//
+//			suggestions.addSuggestionsAsBooks(booksForSuggestions);
+//			return suggestions;
+//
+//		} catch (NotFoundException notFoundException) {
+//			throw notFoundException;
+//		} catch (WebApplicationException e) {
+//			throw new WebApplicationException(Response.Status.SERVICE_UNAVAILABLE);
+//		}
+//	}
 	
 	
 	
